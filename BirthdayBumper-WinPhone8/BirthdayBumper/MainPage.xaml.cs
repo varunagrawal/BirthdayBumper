@@ -26,6 +26,7 @@ namespace BirthdayBumper
             //BuildLocalizedApplicationBar();
         }
 
+
         // Load data for the ViewModel Items
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -64,5 +65,7 @@ namespace BirthdayBumper
         //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
         //    ApplicationBar.MenuItems.Add(appBarMenuItem);
         //}
+
+        
     }
 }
