@@ -5,10 +5,13 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using BirthdayBumper.Resources;
 using BirthdayBumper.ViewModels;
+using BirthdayBumper.Models;
+using BirthdayBumper.Views;
 
 namespace BirthdayBumper
 {
@@ -17,37 +20,23 @@ namespace BirthdayBumper
         // Constructor
         public MainPage()
         {
-            InitializeComponent();
-
-            // Set the data context of the LongListSelector control to the sample data
-            DataContext = App.ViewModel;
+            InitializeComponent();            
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
         }
 
-
-        // Load data for the ViewModel Items
+       
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (!App.ViewModel.IsDataLoaded)
-            {
-                App.ViewModel.LoadData();
-            }
+            
+            NavigationService.Navigate(new Uri("/Views/FacebookLogin.xaml", UriKind.RelativeOrAbsolute));
+            
         }
 
-        // Handle selection changed on LongListSelector
-        private void MainLongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void FacebookLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            // If selected item is null (no selection) do nothing
-            if (MainLongListSelector.SelectedItem == null)
-                return;
-
-            // Navigate to the new page
-            NavigationService.Navigate(new Uri("/DetailsPage.xaml?selectedItem=" + (MainLongListSelector.SelectedItem as ItemViewModel).ID, UriKind.Relative));
-
-            // Reset selected item to null (no selection)
-            MainLongListSelector.SelectedItem = null;
+            NavigationService.Navigate(new Uri("/Views/FacebookLogin.xaml", UriKind.RelativeOrAbsolute));
         }
 
         // Sample code for building a localized ApplicationBar

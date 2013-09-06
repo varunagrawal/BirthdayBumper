@@ -25,7 +25,7 @@ namespace BirthdayBumper
         // When page is navigated to set data context to selected item in list
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (DataContext == null)
+            /*if (DataContext == null)
             {
                 string selectedIndex = "";
                 if (NavigationContext.QueryString.TryGetValue("selectedItem", out selectedIndex))
@@ -33,7 +33,7 @@ namespace BirthdayBumper
                     int index = int.Parse(selectedIndex);
                     DataContext = App.ViewModel.Items[index];
                 }
-            }
+            }*/
         }
 
         // Sample code for building a localized ApplicationBar
