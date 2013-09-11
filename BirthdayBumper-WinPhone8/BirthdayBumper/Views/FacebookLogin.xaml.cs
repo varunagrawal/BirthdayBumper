@@ -32,7 +32,7 @@ namespace BirthdayBumper.Views
             {
                 BBFacebook.isAuthenticated = true;
 
-               // BBFacebook.AccessToken = GetSavedAccessToken();
+                BBFacebook.AccessToken = GetSavedAccessToken();
                 if (BBFacebook.AccessToken == null || String.IsNullOrEmpty(BBFacebook.AccessToken))
                 {
                     await Authenticate();
@@ -56,7 +56,7 @@ namespace BirthdayBumper.Views
 
                 if (SaveAccessToken(BBFacebook.AccessToken))
                 {
-                    MessageBox.Show("Access Token Saved");
+                    MessageBox.Show("Successful Login");
                 }
 
             }
