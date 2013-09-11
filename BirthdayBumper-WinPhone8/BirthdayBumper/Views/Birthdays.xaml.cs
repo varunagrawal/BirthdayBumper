@@ -69,7 +69,7 @@ namespace BirthdayBumper.Views
                             }
 
                             BirthdaysToday.DataContext = FBData.Friends;
-                            Notify.Text = "Tap Friend To Wish Them";
+                            Notify.Text = "";
                         });
 
                 };
@@ -83,9 +83,6 @@ namespace BirthdayBumper.Views
                     q = string.Format("SELECT uid, name, birthday, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND strpos(birthday, '{0} {1}') >= 0", month, day)
                 });
 
-
-            FacebookWebDialog dialog = new FacebookWebDialog();
-            
         }
 
 
@@ -104,13 +101,56 @@ namespace BirthdayBumper.Views
             if (BirthdaysToday.SelectedItem == null)
                 return;
 
-            MessageBox.Show("Yay! You wished " + (BirthdaysToday.SelectedItem as FBFriend).Name);
+            //MessageBox.Show("Yay! You wished " + (BirthdaysToday.SelectedItem as FBFriend).Name);
             // Navigate to the new page
-            //NavigationService.Navigate(new Uri("/DetailsPage.xaml?selectedItem=" + (BirthdaysToday.SelectedItem as FBFriend).Id, UriKind.Relative));
+            NavigationService.Navigate(new Uri("/Views/WishFriend.xaml?selectedItem=" + (BirthdaysToday.SelectedItem as FBFriend).Id, UriKind.RelativeOrAbsolute));
 
             // Reset selected item to null (no selection)
             BirthdaysToday.SelectedItem = null;
         }
-      
+
+        #region PostButtonAction
+        //private void PostButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var parameters = new Dictionary<string, object>();
+        //    parameters["app_id"] = BBFacebook.App_Id;
+        //    parameters["method"] = "feed";
+        //    parameters["redirect_uri"] = "https://www.bing.com";
+        //    parameters["from"] = "1587053882";
+        //    parameters["to"] = "1447512688";
+        //    parameters["description"] = "Hi. What are the odds? ;)";
+        //    var fb = new FacebookClient(BBFacebook.AccessToken);
+
+            
+
+        //    fb.GetCompleted += (o, ev) =>
+        //    {
+        //        if (ev.Error != null)
+        //        {
+        //            Dispatcher.BeginInvoke(() => MessageBox.Show(ev.Error.Message));
+        //            return;
+        //        }
+
+        //        var result = (IDictionary<string, object>)ev.GetResultData();
+
+        //        try
+        //        {
+        //            if (result.ContainsKey("post_id"))
+        //                PostButton.Content = result["post_id"];
+        //            else
+        //                PostButton.Content = "Bad";
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            PostButton.Content = ex.Message;
+        //        }
+
+        //    };
+
+        //    fb.PostTaskAsync("feed", parameters);
+
+        //}
+        #endregion
+
     }
 }

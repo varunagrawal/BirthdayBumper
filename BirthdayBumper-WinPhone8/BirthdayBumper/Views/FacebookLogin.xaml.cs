@@ -32,8 +32,8 @@ namespace BirthdayBumper.Views
             {
                 BBFacebook.isAuthenticated = true;
 
-                BBFacebook.AccessToken = GetSavedAccessToken();
-                if (BBFacebook.AccessToken == null)
+               // BBFacebook.AccessToken = GetSavedAccessToken();
+                if (BBFacebook.AccessToken == null || String.IsNullOrEmpty(BBFacebook.AccessToken))
                 {
                     await Authenticate();
                 }
@@ -50,6 +50,7 @@ namespace BirthdayBumper.Views
             try
             {
                 session = await BBFacebook.fbSessionClient.LoginAsync(ExtendedPermissions);
+                
                 BBFacebook.AccessToken = session.AccessToken;
                 BBFacebook.FacebookId = session.FacebookId;
 
@@ -59,7 +60,7 @@ namespace BirthdayBumper.Views
                 }
 
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
                 message = "Login failed! Exception details: " + e.Message;
                 MessageBox.Show(message);
@@ -67,21 +68,6 @@ namespace BirthdayBumper.Views
         }
 
 
-       
-        private void FBBrowser_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        
-
-        private void FBBrowser_Navigated(object sender, NavigationEventArgs e)
-        {
-            
-
-        }
-
-        
 
 
         private string GetSavedAccessToken()
