@@ -32,13 +32,14 @@ namespace BirthdayBumper.Views
             {
                 BBFacebook.isAuthenticated = true;
 
-                BBFacebook.AccessToken = GetSavedAccessToken();
-                if (BBFacebook.AccessToken == null || String.IsNullOrEmpty(BBFacebook.AccessToken))
-                {
-                    await Authenticate();
-                }
+                await Authenticate();
+
+                //BBFacebook.AccessToken = GetSavedAccessToken();
+                //if (BBFacebook.AccessToken == null || String.IsNullOrEmpty(BBFacebook.AccessToken))
+                //{
+                //    
+                //}
                 
-                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
             }
         }
         
@@ -54,10 +55,12 @@ namespace BirthdayBumper.Views
                 BBFacebook.AccessToken = session.AccessToken;
                 BBFacebook.FacebookId = session.FacebookId;
 
-                if (SaveAccessToken(BBFacebook.AccessToken))
-                {
-                    MessageBox.Show("Successful Login");
-                }
+                //if (SaveAccessToken(BBFacebook.AccessToken))
+                //{
+                //    MessageBox.Show("Successful Login");
+                //}
+
+                Dispatcher.BeginInvoke(() => NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute)));
 
             }
             catch (Exception e)
