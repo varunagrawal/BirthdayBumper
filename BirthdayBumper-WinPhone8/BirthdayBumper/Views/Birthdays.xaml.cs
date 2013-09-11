@@ -14,6 +14,7 @@ using BirthdayBumper.ViewModels;
 using BirthdayBumper.Models;
 using Facebook;
 using Facebook.Client;
+using Microsoft.Advertising.Mobile.UI;
 
 namespace BirthdayBumper.Views
 {
@@ -89,6 +90,11 @@ namespace BirthdayBumper.Views
         // Load data for the ViewModel Items
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            // Removes the previous pages from the Back Stack.
+            // This ensures that the hardware back button causes the app to exit from this page.
+            NavigationService.RemoveBackEntry();
+            NavigationService.RemoveBackEntry();
+
             getFriendsBirthdays();
         }
 

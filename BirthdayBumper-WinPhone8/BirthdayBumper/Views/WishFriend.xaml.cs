@@ -29,7 +29,7 @@ namespace BirthdayBumper.Views
             string id;
             if (NavigationContext.QueryString.TryGetValue("selectedItem", out id))
             {
-                WishFriendBrowser.Navigate(new Uri("https://www.facebook.com/" + id ));
+                WishFriendBrowser.Navigate(new Uri("https://www.facebook.com/" + id));
             }
 
         }
