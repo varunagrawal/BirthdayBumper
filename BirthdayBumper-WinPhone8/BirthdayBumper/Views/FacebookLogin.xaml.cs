@@ -17,9 +17,7 @@ namespace BirthdayBumper.Views
 {
     public partial class FacebookLogin : PhoneApplicationPage
     {
-        private const string ExtendedPermissions = "user_about_me,read_stream,friends_birthday";
-        private FacebookSession session;
-       
+        
         public FacebookLogin()
         {
             InitializeComponent();
@@ -31,34 +29,22 @@ namespace BirthdayBumper.Views
             if (!BBFacebook.isAuthenticated)
             {
                 BBFacebook.isAuthenticated = true;
-
                 await Authenticate();
-
-                //BBFacebook.AccessToken = GetSavedAccessToken();
-                //if (BBFacebook.AccessToken == null || String.IsNullOrEmpty(BBFacebook.AccessToken))
-                //{
-                //    
-                //}
-                
             }
         }
-        
 
+
+        private FacebookSession session;
         private async Task Authenticate()
         {
             string message = String.Empty;
 
             try
             {
-                session = await BBFacebook.fbSessionClient.LoginAsync(ExtendedPermissions);
+                session = await BBFacebook.fbSessionClient.LoginAsync(BBFacebook.ExtendedPermissions);
                 
                 BBFacebook.AccessToken = session.AccessToken;
                 BBFacebook.FacebookId = session.FacebookId;
-
-                //if (SaveAccessToken(BBFacebook.AccessToken))
-                //{
-                //    MessageBox.Show("Successful Login");
-                //}
 
                 Dispatcher.BeginInvoke(() => NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute)));
 

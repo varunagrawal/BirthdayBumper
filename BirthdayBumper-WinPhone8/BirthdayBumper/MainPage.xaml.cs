@@ -29,8 +29,10 @@ namespace BirthdayBumper
        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            
-            NavigationService.Navigate(new Uri("/Views/FacebookLogin.xaml", UriKind.RelativeOrAbsolute));
+            if (!BBFacebook.isAuthenticated)
+                NavigationService.Navigate(new Uri("/Views/FacebookLogin.xaml", UriKind.RelativeOrAbsolute));
+            else
+                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
             
         }
 

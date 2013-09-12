@@ -22,13 +22,21 @@ namespace BirthdayBumper.Views
     {
         public Birthdays()
         {
-            
             InitializeComponent();
-
+            
         }
 
-        
 
+        // Load data for the ViewModel Items
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            NavigationService.RemoveBackEntry();
+            NavigationService.RemoveBackEntry();
+
+            getFriendsBirthdays();
+        }
+
+ 
         private void getFriendsBirthdays()
         {
             var fb = new FacebookClient(BBFacebook.AccessToken);
@@ -70,6 +78,10 @@ namespace BirthdayBumper.Views
                             }
 
                             BirthdaysToday.DataContext = FBData.Friends;
+
+                            if (FBData.Friends.Count <= 0)
+                                MessageBox.Show("No Birthdays Today");
+
                             Notify.Text = "";
                         });
 
@@ -85,19 +97,6 @@ namespace BirthdayBumper.Views
                 });
 
         }
-
-
-        // Load data for the ViewModel Items
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            // Removes the previous pages from the Back Stack.
-            // This ensures that the hardware back button causes the app to exit from this page.
-            NavigationService.RemoveBackEntry();
-            NavigationService.RemoveBackEntry();
-
-            getFriendsBirthdays();
-        }
-
 
       
         // Handle selection changed on LongListSelector
