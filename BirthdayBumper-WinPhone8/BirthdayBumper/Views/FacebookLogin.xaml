@@ -31,6 +31,7 @@
             <!--phone:WebBrowser x:Name="FBBrowser" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="446" Height="587" Loaded="FBBrowser_Loaded" Navigated="FBBrowser_Navigated" /-->
 
         </Grid>
+        <phone:WebBrowser x:Name="FBLogin" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,10,0,0" Grid.Row="1" Height="527" Width="456" IsScriptEnabled="True" Navigated="FBLogin_Navigated"/>
     </Grid>
 
 </phone:PhoneApplicationPage>

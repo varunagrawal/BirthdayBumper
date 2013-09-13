@@ -8,6 +8,7 @@ using System.Windows.Navigation;
 using System.Threading.Tasks;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using System.IO;
 
 using Facebook;
 using Facebook.Client;
@@ -18,22 +19,95 @@ namespace BirthdayBumper.Views
     public partial class FacebookLogin : PhoneApplicationPage
     {
         
+        private readonly FacebookClient _fb = new FacebookClient();
+        private Dictionary<string, object> facebookData = new Dictionary<string, object>();
+
         public FacebookLogin()
         {
             InitializeComponent();
             this.Loaded += FacebookLogin_Loaded;
         }
 
-        async void FacebookLogin_Loaded(object sender, RoutedEventArgs e)
+        void FacebookLogin_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!BBFacebook.isAuthenticated)
+            //if (!BBFacebook.isAuthenticated)
+            //{
+            //    BBFacebook.isAuthenticated = true;
+            //    await Authenticate();
+            //}
+
+            if (String.IsNullOrEmpty(BBFacebook.AccessToken))
             {
-                BBFacebook.isAuthenticated = true;
-                await Authenticate();
+                var loginUrl = GetFacebookLoginUrl(BBFacebook.App_Id, BBFacebook.ExtendedPermissions);
+                FBLogin.Navigate(loginUrl);
+            }
+            else 
+            {
+                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));       
+            }
+            
+        }
+
+        private Uri GetFacebookLoginUrl(string appId, string extendedPermissions)
+        {
+            var parameters = new Dictionary<string, object>();
+            parameters["client_id"] = appId;
+            parameters["redirect_uri"] = "https://www.facebook.com/connect/login_success.html";
+            parameters["response_type"] = "token";
+            parameters["display"] = "touch";
+
+            // add the 'scope' only if we have extendedPermissions.
+            if (!string.IsNullOrEmpty(extendedPermissions))
+            {
+                // A comma-delimited list of permissions
+                parameters["scope"] = extendedPermissions;
+            }
+
+            return _fb.GetLoginUrl(parameters);
+        }
+        
+
+        
+        private void FBLogin_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            FacebookOAuthResult oauthResult;
+            if (!_fb.TryParseOAuthCallbackUrl(e.Uri, out oauthResult))
+            {
+                return;
+            }
+
+            if (oauthResult.IsSuccess)
+            {
+                BBFacebook.AccessToken = oauthResult.AccessToken;
+                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
+            }
+            else
+            {
+                // user cancelled
+                MessageBox.Show(oauthResult.ErrorDescription);
             }
         }
 
+        
+        
 
+        void GetAccessToken()
+        {
+            Dispatcher.BeginInvoke(() =>
+            {
+                if (string.IsNullOrEmpty(BBFacebook.AccessToken))
+                {
+                    MessageBox.Show("AccessToken not valid");
+                }
+                else
+                {
+                    NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));       
+                }
+            });
+        }
+
+
+        
         private FacebookSession session;
         private async Task Authenticate()
         {
@@ -42,7 +116,7 @@ namespace BirthdayBumper.Views
             try
             {
                 session = await BBFacebook.fbSessionClient.LoginAsync(BBFacebook.ExtendedPermissions);
-                
+
                 BBFacebook.AccessToken = session.AccessToken;
                 BBFacebook.FacebookId = session.FacebookId;
 
@@ -56,70 +130,6 @@ namespace BirthdayBumper.Views
             }
         }
 
-
-
-
-        private string GetSavedAccessToken()
-        {
-            System.IO.IsolatedStorage.IsolatedStorageFile local =
-                System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication();
-
-            if (!local.FileExists(@"DataFolder\AccessToken.txt"))
-            {
-                return null;
-            }
-
-            using (var isoFileStream =
-                    new System.IO.IsolatedStorage.IsolatedStorageFileStream(
-                        @"DataFolder\AccessToken.txt", System.IO.FileMode.Open, local))
-            {
-                using (var isoFileReader = new System.IO.StreamReader(isoFileStream))
-                {
-                    string line = isoFileReader.ReadLine();
-                    string[] index = line.Split(':');
-
-                    if (index[0] == "AccessToken" && !String.IsNullOrEmpty(index[1]))
-                    {   
-                        return index[1];
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
-        }
-
-
-        private bool SaveAccessToken(string accessToken)
-        {
-            try
-            {
-                System.IO.IsolatedStorage.IsolatedStorageFile local = System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication();
-
-                if (!local.DirectoryExists("DataFolder"))
-                {
-                    local.CreateDirectory("DataFolder");
-                }
-
-
-                using (var isoFileStream = new System.IO.IsolatedStorage.IsolatedStorageFileStream(@"DataFolder\AccessToken.txt", System.IO.FileMode.OpenOrCreate, local))
-                {
-                    using (var isoFileWriter = new System.IO.StreamWriter(isoFileStream))
-                    {
-                        isoFileWriter.WriteLine("AccessToken:" + accessToken);
-                    }
-                }
-
-                return true;
-
-            }
-            catch (Exception e)
-            { 
-                MessageBox.Show("Error: " + e.Message);
-                return false;
-            }
-        }
-
     }
+
 }
