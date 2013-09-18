@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirthdayBumper", "BirthdayBumper\BirthdayBumper.csproj", "{9FB59823-2C36-4C74-A614-B2B005CEC608}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirthdayReminderAgent", "BirthdayReminder\BirthdayReminderAgent.csproj", "{A1AF7215-4811-4DFE-AC84-73B43C659A5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,18 @@ Global
 		{9FB59823-2C36-4C74-A614-B2B005CEC608}.Release|x86.ActiveCfg = Release|x86
 		{9FB59823-2C36-4C74-A614-B2B005CEC608}.Release|x86.Build.0 = Release|x86
 		{9FB59823-2C36-4C74-A614-B2B005CEC608}.Release|x86.Deploy.0 = Release|x86
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Debug|ARM.Build.0 = Debug|ARM
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Debug|x86.ActiveCfg = Debug|x86
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Debug|x86.Build.0 = Debug|x86
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Release|ARM.ActiveCfg = Release|ARM
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Release|ARM.Build.0 = Release|ARM
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Release|x86.ActiveCfg = Release|x86
+		{A1AF7215-4811-4DFE-AC84-73B43C659A5A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

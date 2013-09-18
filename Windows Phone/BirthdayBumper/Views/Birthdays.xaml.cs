@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Scheduler;
 
 using Facebook;
 using BirthdayBumper.Models;
@@ -16,6 +17,9 @@ namespace BirthdayBumper.Views
 {
     public partial class Birthdays : PhoneApplicationPage
     {
+        bool BirthdaysLoaded = false;
+        FacebookDataModel FBData;
+
         public Birthdays()
         {
             InitializeComponent();
@@ -27,9 +31,14 @@ namespace BirthdayBumper.Views
         {
             while(NavigationService.CanGoBack)
                 NavigationService.RemoveBackEntry();
+
+            if (!BirthdaysLoaded)
+            {
+                BirthdaysLoaded = true;
+                getFriendsBirthdays();
+
+            }
             
-            Load_Notify.Visibility = System.Windows.Visibility.Visible;
-            getFriendsBirthdays();
         }
 
 
@@ -51,7 +60,7 @@ namespace BirthdayBumper.Views
 
                 Dispatcher.BeginInvoke(() =>
                 {
-                    var FBData = new FacebookDataModel();
+                    FBData = new FacebookDataModel();
 
                     foreach (var item in data)
                     {
@@ -103,12 +112,24 @@ namespace BirthdayBumper.Views
             if (BirthdaysList.SelectedItem == null)
                 return;
 
-            //MessageBox.Show("Yay! You wished " + (BirthdaysToday.SelectedItem as FBFriend).Name);
-            // Navigate to the new page
-            NavigationService.Navigate(new Uri("/Views/WishFriend.xaml?selectedItem=" + (BirthdaysList.SelectedItem as FB_Friend).Id, UriKind.RelativeOrAbsolute));
+            FB_Friend f = BirthdaysList.SelectedItem as FB_Friend;
 
-            // Reset selected item to null (no selection)
-            BirthdaysList.SelectedItem = null;
+            if (!f.Wished)
+            {
+                f.Wished = true;
+
+                // Reset selected item to null (no selection)
+                BirthdaysList.SelectedItem = null;
+
+                // Navigate to the new page
+                NavigationService.Navigate(new Uri("/Views/WishFriend.xaml?selectedItem=" + f.Id, UriKind.RelativeOrAbsolute));
+            }
+            else
+            {
+                MessageBox.Show("You already wished " + f.Name);
+            }
         }
+
+
     }
 }

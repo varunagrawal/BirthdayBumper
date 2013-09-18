@@ -40,7 +40,14 @@ namespace BirthdayBumper.Models
                 if (accessToken.Equals(""))
                     appSettings.Remove("accessToken");
                 else
-                    appSettings.Add("accessToken", accessToken);
+                {
+                    if (!appSettings.Contains("accessToken"))
+                    {
+                        appSettings.Remove("accessToken");
+                        appSettings.Add("accessToken", accessToken);
+                    }
+                }
+                    
             }
         }
     }

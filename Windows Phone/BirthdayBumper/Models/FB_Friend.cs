@@ -15,6 +15,7 @@ namespace BirthdayBumper.Models
             Day = _day;
             Month = _month;
             PictureUri = _pic;
+            Wished = false;
         }
 
 

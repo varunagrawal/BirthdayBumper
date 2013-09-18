@@ -30,7 +30,7 @@
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <phone:WebBrowser x:Name="FBLoginBrowser" HorizontalAlignment="Left" VerticalAlignment="Top" Width="456" Height="493" Navigated="FBLoginBrowser_Navigated" />
 
-            <!--UI:AdControl ApplicationId="fecf31e4-2463-41d0-8b69-2081296382e8" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,526,0,0" IsAutoRefreshEnabled="True"/-->
+            <UI:AdControl ApplicationId="fecf31e4-2463-41d0-8b69-2081296382e8" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,526,0,0" IsAutoRefreshEnabled="True"/>
 
         </Grid>
     </Grid>

@@ -79,6 +79,7 @@ namespace BirthdayBumper.Models
 
         public Uri PictureUri { get; set; }
 
+        public bool Wished { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
