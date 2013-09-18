@@ -32,9 +32,11 @@
             <phone:LongListSelector x:Name="BirthdaysList" HorizontalAlignment="Left" Height="482" VerticalAlignment="Top" Width="446" ItemsSource="{Binding}" SelectionChanged="BirthdayList_SelectionChanged">
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding PictureUri}" Height="40" Width="50" />
-                            <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" />
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10,12,0,0">
+                                <Image Source="{Binding PictureUri}" Height="60" Width="70" />
+                                <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" />
+                            </StackPanel>
                         </StackPanel>
                     </DataTemplate>
                 </phone:LongListSelector.ItemTemplate>

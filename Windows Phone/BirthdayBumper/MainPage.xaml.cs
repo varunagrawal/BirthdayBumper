@@ -11,6 +11,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using BirthdayBumper.Resources;
 using Microsoft.Phone.Scheduler;
+using Microsoft.Phone.Net.NetworkInformation;
 
 namespace BirthdayBumper
 {
@@ -28,12 +29,22 @@ namespace BirthdayBumper
             this.Loaded += MainPage_Loaded;
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
-
         }
 
 
         void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+            // Check for Network Connectivity. If not available, then show message and exit.
+            if (!NetworkInterface.GetIsNetworkAvailable())
+            {
+                MessageBox.Show("No Network Connectivity." + Environment.NewLine + "Please check if you are connected to the Internet.");
+                Application.Current.Terminate();
+            }
+
+            // Setup Toast Notifications for the App
+            PushNotificationSetup();
+
+            // Navigate to the Facebook Login Page
             NavigationService.Navigate(new Uri("/Views/FacebookLoginPage.xaml", UriKind.RelativeOrAbsolute));
 
         }
@@ -56,8 +67,8 @@ namespace BirthdayBumper
         //    ApplicationBar.MenuItems.Add(appBarMenuItem);
         //}
 
-
-        private void pushNotificationSetup()
+        
+        private void PushNotificationSetup()
         {
             // Obtain a reference to the period task, if one exists
             periodicTask = ScheduledActionService.Find(periodicTaskName) as PeriodicTask;

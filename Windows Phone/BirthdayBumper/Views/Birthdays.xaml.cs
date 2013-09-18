@@ -114,20 +114,25 @@ namespace BirthdayBumper.Views
 
             FB_Friend f = BirthdaysList.SelectedItem as FB_Friend;
 
+            // Reset selected item to null (no selection)
+            BirthdaysList.SelectedItem = null;
+
+            // Navigate to the new page
+            NavigationService.Navigate(new Uri("/Views/WishFriend.xaml?selectedItem=" + f.Id, UriKind.RelativeOrAbsolute));
+
+
+            /*
             if (!f.Wished)
             {
                 f.Wished = true;
 
-                // Reset selected item to null (no selection)
-                BirthdaysList.SelectedItem = null;
-
-                // Navigate to the new page
-                NavigationService.Navigate(new Uri("/Views/WishFriend.xaml?selectedItem=" + f.Id, UriKind.RelativeOrAbsolute));
+                
             }
             else
             {
                 MessageBox.Show("You already wished " + f.Name);
             }
+            */
         }
 
 
