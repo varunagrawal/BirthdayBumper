@@ -24,14 +24,11 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="BIRTHDAY BUMPER" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="facebook login" FontSize="65" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="" FontSize="65" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <phone:WebBrowser x:Name="FBLoginBrowser" HorizontalAlignment="Left" VerticalAlignment="Top" Width="456" Height="493" Navigated="FBLoginBrowser_Navigated" />
-
-            <UI:AdControl ApplicationId="fecf31e4-2463-41d0-8b69-2081296382e8" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,526,0,0" IsAutoRefreshEnabled="True"/>
-
+            <phone:WebBrowser x:Name="FBLoginBrowser" HorizontalAlignment="Left" VerticalAlignment="Top" Width="456" Height="665" Navigated="FBLoginBrowser_Navigated" Margin="0,-84,0,0" />
         </Grid>
     </Grid>
 

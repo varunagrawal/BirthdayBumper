@@ -53,8 +53,9 @@ namespace BirthdayBumper.Views
                 parameters["scope"] = extendedPermissions;
             }
 
+            string loginUri = _fb.GetLoginUrl(parameters).ToString().Replace("www.facebook.com", "m.facebook.com");
 
-            return _fb.GetLoginUrl(parameters);
+            return new Uri(loginUri);
         }
 
 
