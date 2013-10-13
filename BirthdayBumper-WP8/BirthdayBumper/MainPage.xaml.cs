@@ -44,7 +44,7 @@ namespace BirthdayBumper
 
             // Navigate to the Facebook Login Page
             NavigationService.Navigate(new Uri("/Views/FacebookLoginPage.xaml", UriKind.RelativeOrAbsolute));
-
+            //NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
         }
 
 

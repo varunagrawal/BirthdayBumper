@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace BirthdayBumper.Models
 {
-    class FB_Friend : Friend
+    class FacebookFriend : Friend
     {
-        public FB_Friend(string _id, string _name, string _day, string _month, Uri _pic)
+        public FacebookFriend(string _id, string _name, string _day, string _month, Uri _pic)
         {
             Id = _id;
             Name = _name;
             Day = _day;
             Month = _month;
-            PictureUri = _pic;
+            Picture = new BitmapImage(_pic);
             Wished = false;
         }
 

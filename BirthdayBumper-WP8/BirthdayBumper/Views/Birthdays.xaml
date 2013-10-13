@@ -34,7 +34,7 @@
                     <DataTemplate>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="10,12,0,0">
-                                <Image Source="{Binding PictureUri}" Height="60" Width="70" />
+                                <Image Source="{Binding Picture}" Height="60" Width="70" />
                                 <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" />
                             </StackPanel>
                         </StackPanel>

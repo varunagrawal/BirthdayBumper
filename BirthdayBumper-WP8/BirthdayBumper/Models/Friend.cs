@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Windows.Media.Imaging;
 
 namespace BirthdayBumper.Models
 {
@@ -21,7 +22,6 @@ namespace BirthdayBumper.Models
             set
             {
                 id = value;
-                NotifyPropertyChanged("Id");
             }
         }
 
@@ -38,7 +38,6 @@ namespace BirthdayBumper.Models
             set
             {
                 name = value;
-                NotifyPropertyChanged("Name");
             }
         }
 
@@ -55,7 +54,6 @@ namespace BirthdayBumper.Models
             set
             {
                 day = value;
-                NotifyPropertyChanged("Day");
             }
         }
 
@@ -71,25 +69,17 @@ namespace BirthdayBumper.Models
 
             set
             {
-                month = value;
-                NotifyPropertyChanged("Month");
+                month = value;        
             }
         }
 
 
-        public Uri PictureUri { get; set; }
+        public string Year { get; set; }
+
+        public BitmapImage Picture { get; set; }
 
         public bool Wished { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
 
     }
 }
