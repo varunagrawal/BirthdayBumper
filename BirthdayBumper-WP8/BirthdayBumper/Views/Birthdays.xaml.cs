@@ -44,14 +44,13 @@ namespace BirthdayBumper.Views
         private void GetFriendsBirthdays()
         {
             //FacebookFriendsBirthdays();
+            FriendData = new FriendDataModel();
+            
             FriendData.FacebookBirthdays();
 
             Load_Notify.Visibility = System.Windows.Visibility.Collapsed;
 
             BirthdaysList.DataContext = FriendData.Friends;
-
-            if (FriendData.Friends.Count <= 0)
-                MessageBox.Show("No Birthdays Today");
 
         }
 
@@ -88,15 +87,25 @@ namespace BirthdayBumper.Views
                         {
                             string[] Birthdate = ((string)friend["birthday"]).Split(' ');
 
-                            FriendData.Friends.Add(new FacebookFriend
-                            (
-                                friend["uid"].ToString(),
-                                (string)friend["name"],
-                                Birthdate[1],
-                                Birthdate[0],
-                                new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
-                            ));
-
+                            if(Birthdate.Length == 3)
+                                FriendData.Friends.Add(new FacebookFriend
+                                (
+                                    friend["uid"].ToString(),
+                                    (string)friend["name"],
+                                    Birthdate[1],
+                                    Birthdate[0],
+                                    Birthdate[2],
+                                    new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
+                                ));
+                            else
+                                FriendData.Friends.Add(new FacebookFriend
+                                (
+                                    friend["uid"].ToString(),
+                                    (string)friend["name"],
+                                    Birthdate[1],
+                                    Birthdate[0],
+                                    new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
+                                ));
                         }
 
                     }

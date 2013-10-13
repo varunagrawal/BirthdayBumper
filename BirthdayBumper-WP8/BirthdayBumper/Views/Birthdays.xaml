@@ -37,6 +37,7 @@
                                 <Image Source="{Binding Picture}" Height="60" Width="70" />
                                 <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" />
                             </StackPanel>
+                            <Image Source="/Images/Delete.png" Height="30" Width="30" Margin="0,0,0,0" />
                         </StackPanel>
                     </DataTemplate>
                 </phone:LongListSelector.ItemTemplate>
@@ -44,10 +45,16 @@
 
             <TextBlock x:Name="Load_Notify" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Loading" VerticalAlignment="Top" Height="37" Width="201"/>
 
-
-            <UI:AdControl ApplicationId="fecf31e4-2463-41d0-8b69-2081296382e8" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,517,0,0" IsAutoRefreshEnabled="True"/>
+            <UI:AdControl ApplicationId="fecf31e4-2463-41d0-8b69-2081296382e8" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,445,0,0" IsAutoRefreshEnabled="True"/>
 
         </Grid>
     </Grid>
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Images/Add.png" Text="Add Account"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/Refresh.png" Text="Refresh"/>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>

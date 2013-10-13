@@ -9,6 +9,18 @@ namespace BirthdayBumper.Models
 {
     class FacebookFriend : Friend
     {
+        public FacebookFriend(string _id, string _name, string _day, string _month, string _year, Uri _pic)
+        {
+            Id = _id;
+            Name = _name;
+            Day = _day;
+            Month = _month;
+            Year = _year;
+            Picture = new BitmapImage(_pic);
+            Wished = false;
+        }
+
+
         public FacebookFriend(string _id, string _name, string _day, string _month, Uri _pic)
         {
             Id = _id;
@@ -18,7 +30,6 @@ namespace BirthdayBumper.Models
             Picture = new BitmapImage(_pic);
             Wished = false;
         }
-
 
     }
 }

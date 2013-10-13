@@ -92,14 +92,13 @@ namespace BirthdayBumper.ViewModels
                 BitmapImage img = new BitmapImage();
                 img.SetSource(c.GetPicture());
 
-                ContactFriend f = new ContactFriend
-                {
-                    Name = c.CompleteName.ToString(),
-                    Day = d.Day.ToString(),
-                    Month = d.Month.ToString(),
-                    Year = d.Year.ToString(),
-                    Picture = img
-                };
+                ContactFriend f = new ContactFriend(
+                    c.PhoneNumbers.First().ToString(), 
+                    c.CompleteName.ToString(), 
+                    d.Day.ToString(),
+                    d.Month.ToString(),
+                    d.Year.ToString(),
+                    img);
 
                 Friends.Add(f);
             }
