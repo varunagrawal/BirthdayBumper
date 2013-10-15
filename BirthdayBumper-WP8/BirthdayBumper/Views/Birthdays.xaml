@@ -33,11 +33,13 @@
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="10,12,0,0">
-                                <Image Source="{Binding Picture}" Height="60" Width="70" />
-                                <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" />
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Width="400" Margin="10,12,0,0">
+                                    <Image Source="{Binding Picture}" Height="60" Width="70" />
+                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" />
+                                </StackPanel>
+                                <Image Source="/Images/Delete.png" Height="30" Width="30" Margin="0,0,0,0" />
                             </StackPanel>
-                            <Image Source="/Images/Delete.png" Height="30" Width="30" Margin="0,0,0,0" />
                         </StackPanel>
                     </DataTemplate>
                 </phone:LongListSelector.ItemTemplate>
@@ -52,8 +54,8 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/Add.png" Text="Add Account"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/Refresh.png" Text="Refresh"/>
+            <shell:ApplicationBarIconButton x:Name="Accounts" IconUri="/Images/Configuration.png" Text="Accounts" Click="Accounts_Click" />
+            <shell:ApplicationBarIconButton x:Name="Refresh" IconUri="/Images/Refresh.png" Text="Refresh" Click="Refresh_Click" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

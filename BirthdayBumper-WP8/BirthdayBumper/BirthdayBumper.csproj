@@ -168,6 +168,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Add.png" />
+    <Content Include="Images\Configuration.png" />
     <Content Include="Images\Delete.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

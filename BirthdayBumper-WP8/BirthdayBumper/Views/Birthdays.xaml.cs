@@ -158,6 +158,17 @@ namespace BirthdayBumper.Views
             */
         }
 
+        
+        private void Accounts_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Accounts: Yet to be implemented.");
+        }
+
+        private void Refresh_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Accounts: Yet to be implemented.");
+        }
+
 
     }
 }
