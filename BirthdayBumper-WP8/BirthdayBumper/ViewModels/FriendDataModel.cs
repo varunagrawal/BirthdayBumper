@@ -81,7 +81,7 @@ namespace BirthdayBumper.ViewModels
 
             cons.SearchCompleted += cons_SearchCompleted;
 
-            cons.SearchAsync(String.Empty, FilterKind.None, "Contacts Sync");
+            cons.SearchAsync(String.Empty, FilterKind.None , "Contacts Sync");
         }
 
         void cons_SearchCompleted(object sender, ContactsSearchEventArgs e)
@@ -90,18 +90,23 @@ namespace BirthdayBumper.ViewModels
             {
                 DateTime d = c.Birthdays.First();
 
-                BitmapImage img = new BitmapImage();
-                img.SetSource(c.GetPicture());
+                if (d.Date.Equals(DateTime.Today.Date))
+                {
+                    BitmapImage img = new BitmapImage();
+                    img.SetSource(c.GetPicture());
 
-                ContactFriend f = new ContactFriend(
-                    c.PhoneNumbers.First().ToString(), 
-                    c.CompleteName.ToString(), 
-                    d.Day.ToString(),
-                    d.Month.ToString(),
-                    d.Year.ToString(),
-                    img);
+                    ContactFriend f = new ContactFriend(
+                        //c.GetHashCode().ToString(),
+                        c.PhoneNumbers.First().ToString(),
+                        c.CompleteName.ToString(),
+                        d.Day.ToString(),
+                        d.Month.ToString(),
+                        d.Year.ToString(),
+                        img);
 
-                Friends.Add(f);
+                    Friends.Add(f);
+                }
+                
             }
 
         }
