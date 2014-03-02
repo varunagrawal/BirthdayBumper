@@ -67,7 +67,12 @@ namespace BirthdayBumper.Views
                         var friend = (IDictionary<string, object>)item;
                         if (friend.ContainsKey("birthday"))
                         {
-                            string[] Birthdate = ((string)friend["birthday"]).Split(' ');
+                            string[] Birthdate = ((string)friend["birthday"]).Split(new char[]{' ', ','});
+                            string m = DateTime.Now.ToString("MMMM");
+                            string d = DateTime.Now.Day.ToString();
+
+                            if (Birthdate[0] != m || Birthdate[1] != d)
+                                continue;
 
                             FBData.Friends.Add(new FB_Friend
                             (
