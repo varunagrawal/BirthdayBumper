@@ -18,7 +18,7 @@ namespace BirthdayBumper.Views
     public partial class Birthdays : PhoneApplicationPage
     {
         bool BirthdaysLoaded = false;
-        FriendDataModel FriendData;
+        FriendDataModel FriendData = new FriendDataModel();
 
         public Birthdays()
         {
@@ -42,10 +42,7 @@ namespace BirthdayBumper.Views
         }
 
         private void GetFriendsBirthdays()
-        {
-            //FacebookFriendsBirthdays();
-            FriendData = new FriendDataModel();
-            
+        {            
             FriendData.FacebookBirthdays();
 
             Load_Notify.Visibility = System.Windows.Visibility.Collapsed;
@@ -60,79 +57,6 @@ namespace BirthdayBumper.Views
             
         }
 
-        private void FacebookFriendsBirthdays()
-        {
-            var fb = new FacebookClient(BBFacebook.AccessToken);
-
-            fb.GetCompleted += (o, e) =>
-            {
-                if (e.Error != null)
-                {
-                    Dispatcher.BeginInvoke(() => MessageBox.Show(e.Error.Message));
-                    return;
-                }
-
-                var result = (IDictionary<string, object>)e.GetResultData();
-                var data = (IEnumerable<object>)result["data"];
-
-
-                Dispatcher.BeginInvoke(() =>
-                {
-                    FriendData = new FriendDataModel();
-
-                    foreach (var item in data)
-                    {
-                        var friend = (IDictionary<string, object>)item;
-                        if (friend.ContainsKey("birthday"))
-                        {
-                            string[] Birthdate = ((string)friend["birthday"]).Split(new char[]{' ', ','});
-                            string m = DateTime.Now.ToString("MMMM");
-                            string d = DateTime.Now.Day.ToString();
-
-                            if (Birthdate[0] != m || Birthdate[1] != d)
-                                continue;
-
-                            if(Birthdate.Length == 3)
-                                FriendData.Friends.Add(new FacebookFriend
-                                (
-                                    friend["uid"].ToString(),
-                                    (string)friend["name"],
-                                    Birthdate[1],
-                                    Birthdate[0],
-                                    Birthdate[2],
-                                    new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
-                                ));
-                            else
-                                FriendData.Friends.Add(new FacebookFriend
-                                (
-                                    friend["uid"].ToString(),
-                                    (string)friend["name"],
-                                    Birthdate[1],
-                                    Birthdate[0],
-                                    new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
-                                ));
-                        }
-
-                    }
-
-                    
-                });
-
-            };
-
-            string month = DateTime.Now.ToString("MMMM");
-            int day = DateTime.Now.Day;
-
-            fb.GetTaskAsync("fql",
-                new
-                {
-                    q = string.Format("SELECT uid, name, birthday, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND strpos(birthday, '{0} {1}') >= 0", month, day)
-                });
-
-        }
-
-
-
         // Handle selection changed on LongListSelector
         private void BirthdayList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -144,6 +68,9 @@ namespace BirthdayBumper.Views
 
             // Reset selected item to null (no selection)
             BirthdaysList.SelectedItem = null;
+
+            int index = BirthdaysList.ItemsSource.IndexOf(BirthdaysList.SelectedItem as FacebookFriend);
+            //FriendData.Friends.RemoveAt(index);
 
             // Navigate to the new page
             NavigationService.Navigate(new Uri("/Views/WishFriend.xaml?selectedItem=" + f.Id, UriKind.RelativeOrAbsolute));
@@ -163,7 +90,77 @@ namespace BirthdayBumper.Views
             */
         }
 
-        
+        //private void FacebookFriendsBirthdays()
+        //{
+        //    var fb = new FacebookClient(BBFacebook.AccessToken);
+
+        //    fb.GetCompleted += (o, e) =>
+        //    {
+        //        if (e.Error != null)
+        //        {
+        //            Dispatcher.BeginInvoke(() => MessageBox.Show(e.Error.Message));
+        //            return;
+        //        }
+
+        //        var result = (IDictionary<string, object>)e.GetResultData();
+        //        var data = (IEnumerable<object>)result["data"];
+
+
+        //        Dispatcher.BeginInvoke(() =>
+        //        {
+        //            FriendData = new FriendDataModel();
+
+        //            foreach (var item in data)
+        //            {
+        //                var friend = (IDictionary<string, object>)item;
+        //                if (friend.ContainsKey("birthday"))
+        //                {
+        //                    string[] Birthdate = ((string)friend["birthday"]).Split(new char[] { ' ', ',' });
+        //                    string m = DateTime.Now.ToString("MMMM");
+        //                    string d = DateTime.Now.Day.ToString();
+
+        //                    if (Birthdate[0] != m || Birthdate[1] != d)
+        //                        continue;
+
+        //                    if (Birthdate.Length == 3)
+        //                        FriendData.Friends.Add(new FacebookFriend
+        //                        (
+        //                            friend["uid"].ToString(),
+        //                            (string)friend["name"],
+        //                            Birthdate[1],
+        //                            Birthdate[0],
+        //                            Birthdate[2],
+        //                            new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
+        //                        ));
+        //                    else
+        //                        FriendData.Friends.Add(new FacebookFriend
+        //                        (
+        //                            friend["uid"].ToString(),
+        //                            (string)friend["name"],
+        //                            Birthdate[1],
+        //                            Birthdate[0],
+        //                            new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
+        //                        ));
+        //                }
+
+        //            }
+
+
+        //        });
+
+        //    };
+
+        //    string month = DateTime.Now.ToString("MMMM");
+        //    int day = DateTime.Now.Day;
+
+        //    fb.GetTaskAsync("fql",
+        //        new
+        //        {
+        //            q = string.Format("SELECT uid, name, birthday, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND strpos(birthday, '{0} {1}') >= 0", month, day)
+        //        });
+
+        //}
+
         private void Accounts_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Accounts: Yet to be implemented.");
@@ -172,6 +169,11 @@ namespace BirthdayBumper.Views
         private void Refresh_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Accounts: Yet to be implemented.");
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Delete From list function pending");
         }
 
 

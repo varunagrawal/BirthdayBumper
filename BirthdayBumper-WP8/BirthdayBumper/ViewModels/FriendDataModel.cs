@@ -40,8 +40,10 @@ namespace BirthdayBumper.ViewModels
                     {
                         var friend = (IDictionary<string, object>)item;
                         if (friend.ContainsKey("birthday"))
-                        {
-                            string[] Birthdate = ((string)friend["birthday"]).Split(' ');
+                        {                            
+                            string[] Birthdate = ((string)friend["birthday"]).Split(new char[] { ' ', ',' });
+                            string m = DateTime.Now.ToString("MMMM");
+                            string d = DateTime.Now.Day.ToString();
 
                             Friends.Add(new FacebookFriend
                             (
