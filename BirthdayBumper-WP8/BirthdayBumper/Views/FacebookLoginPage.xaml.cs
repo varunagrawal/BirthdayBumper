@@ -26,9 +26,9 @@ namespace BirthdayBumper.Views
 
         private void FacebookLoginPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (String.IsNullOrEmpty(BB_Facebook.accessToken))
+            if (String.IsNullOrEmpty(BBFacebook.accessToken))
             {    
-                var loginUrl = GetFacebookLoginUrl(BB_Facebook.App_Id, BB_Facebook.ExtendedPermissions);
+                var loginUrl = GetFacebookLoginUrl(BBFacebook.App_Id, BBFacebook.ExtendedPermissions);
                 FBLoginBrowser.Navigate(loginUrl);
             }
             else 
@@ -71,7 +71,7 @@ namespace BirthdayBumper.Views
             if (oauthResult.IsSuccess)
             {
                 var token = oauthResult.AccessToken;
-                BB_Facebook.AccessToken = oauthResult.AccessToken;
+                BBFacebook.AccessToken = oauthResult.AccessToken;
                 NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
             }
             else

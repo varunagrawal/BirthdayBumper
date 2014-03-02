@@ -7,7 +7,7 @@ using System.IO.IsolatedStorage;
 
 namespace BirthdayBumper.Models
 {
-    class BB_Facebook
+    class BBFacebook
     {
         public static readonly string App_Id = "587441381302332";
         public static readonly string AppSecret = "7a8df6147a0e50797ef5736d5cfd7391";

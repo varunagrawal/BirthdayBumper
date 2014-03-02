@@ -18,7 +18,7 @@ namespace BirthdayBumper.Views
     public partial class Birthdays : PhoneApplicationPage
     {
         bool BirthdaysLoaded = false;
-        FacebookDataModel FBData;
+        FriendDataModel FriendData;
 
         public Birthdays()
         {
@@ -35,16 +35,34 @@ namespace BirthdayBumper.Views
             if (!BirthdaysLoaded)
             {
                 BirthdaysLoaded = true;
-                getFriendsBirthdays();
+                GetFriendsBirthdays();
 
             }
             
         }
 
-
-        private void getFriendsBirthdays()
+        private void GetFriendsBirthdays()
         {
-            var fb = new FacebookClient(BB_Facebook.AccessToken);
+            //FacebookFriendsBirthdays();
+            FriendData = new FriendDataModel();
+            
+            FriendData.FacebookBirthdays();
+
+            Load_Notify.Visibility = System.Windows.Visibility.Collapsed;
+
+            BirthdaysList.DataContext = FriendData.Friends;
+
+        }
+
+
+        private void ContactsFriendsBirthdays()
+        { 
+            
+        }
+
+        private void FacebookFriendsBirthdays()
+        {
+            var fb = new FacebookClient(BBFacebook.AccessToken);
 
             fb.GetCompleted += (o, e) =>
             {
@@ -60,7 +78,7 @@ namespace BirthdayBumper.Views
 
                 Dispatcher.BeginInvoke(() =>
                 {
-                    FBData = new FacebookDataModel();
+                    FriendData = new FriendDataModel();
 
                     foreach (var item in data)
                     {
@@ -74,26 +92,30 @@ namespace BirthdayBumper.Views
                             if (Birthdate[0] != m || Birthdate[1] != d)
                                 continue;
 
-                            FBData.Friends.Add(new FB_Friend
-                            (
-                                friend["uid"].ToString(),
-                                (string)friend["name"],
-                                Birthdate[1],
-                                Birthdate[0],
-                                new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
-                            ));
-
+                            if(Birthdate.Length == 3)
+                                FriendData.Friends.Add(new FacebookFriend
+                                (
+                                    friend["uid"].ToString(),
+                                    (string)friend["name"],
+                                    Birthdate[1],
+                                    Birthdate[0],
+                                    Birthdate[2],
+                                    new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
+                                ));
+                            else
+                                FriendData.Friends.Add(new FacebookFriend
+                                (
+                                    friend["uid"].ToString(),
+                                    (string)friend["name"],
+                                    Birthdate[1],
+                                    Birthdate[0],
+                                    new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
+                                ));
                         }
 
                     }
 
-                    Load_Notify.Visibility = System.Windows.Visibility.Collapsed;
-
-                    BirthdaysList.DataContext = FBData.Friends;
-
-                    if (FBData.Friends.Count <= 0)
-                        MessageBox.Show("No Birthdays Today");
-
+                    
                 });
 
             };
@@ -110,6 +132,7 @@ namespace BirthdayBumper.Views
         }
 
 
+
         // Handle selection changed on LongListSelector
         private void BirthdayList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -117,7 +140,7 @@ namespace BirthdayBumper.Views
             if (BirthdaysList.SelectedItem == null)
                 return;
 
-            FB_Friend f = BirthdaysList.SelectedItem as FB_Friend;
+            FacebookFriend f = BirthdaysList.SelectedItem as FacebookFriend;
 
             // Reset selected item to null (no selection)
             BirthdaysList.SelectedItem = null;
@@ -138,6 +161,17 @@ namespace BirthdayBumper.Views
                 MessageBox.Show("You already wished " + f.Name);
             }
             */
+        }
+
+        
+        private void Accounts_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Accounts: Yet to be implemented.");
+        }
+
+        private void Refresh_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Accounts: Yet to be implemented.");
         }
 
 

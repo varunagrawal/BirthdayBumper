@@ -33,9 +33,12 @@
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="10,12,0,0">
-                                <Image Source="{Binding PictureUri}" Height="60" Width="70" />
-                                <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" />
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Width="400" Margin="10,12,0,0">
+                                    <Image Source="{Binding Picture}" Height="60" Width="70" />
+                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" />
+                                </StackPanel>
+                                <Image Source="/Images/Delete.png" Height="30" Width="30" Margin="0,0,0,0" />
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
@@ -44,10 +47,16 @@
 
             <TextBlock x:Name="Load_Notify" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Loading" VerticalAlignment="Top" Height="37" Width="201"/>
 
-
-            <UI:AdControl ApplicationId="fecf31e4-2463-41d0-8b69-2081296382e8" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,517,0,0" IsAutoRefreshEnabled="True"/>
+            <UI:AdControl ApplicationId="fecf31e4-2463-41d0-8b69-2081296382e8" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,445,0,0" IsAutoRefreshEnabled="True"/>
 
         </Grid>
     </Grid>
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton x:Name="Accounts" IconUri="/Images/Configuration.png" Text="Accounts" Click="Accounts_Click" />
+            <shell:ApplicationBarIconButton x:Name="Refresh" IconUri="/Images/Refresh.png" Text="Refresh" Click="Refresh_Click" />
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>
