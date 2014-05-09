@@ -11,7 +11,6 @@ namespace BirthdayBumper.Models
     class Friend
     {
         private string id;
-
         public string Id
         {
             get
@@ -27,7 +26,6 @@ namespace BirthdayBumper.Models
 
 
         private string name;
-
         public string Name
         {
             get
@@ -43,7 +41,6 @@ namespace BirthdayBumper.Models
 
 
         private string day;
-
         public string Day
         {
             get
@@ -59,7 +56,6 @@ namespace BirthdayBumper.Models
 
 
         private string month;
-
         public string Month
         {
             get
@@ -80,6 +76,8 @@ namespace BirthdayBumper.Models
 
         public bool Wished { get; set; }
 
+        public string Type { get; set; }
 
+        public string Site { get; set; }
     }
 }

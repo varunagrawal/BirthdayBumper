@@ -10,7 +10,7 @@ using Microsoft.Phone.Shell;
 
 using Facebook;
 
-using BirthdayBumper.Models;
+using BirthdayBumper.ViewModels;
 
 namespace BirthdayBumper.Views
 {
@@ -26,17 +26,23 @@ namespace BirthdayBumper.Views
 
         private void FacebookLoginPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (String.IsNullOrEmpty(BBFacebook.accessToken))
-            {    
-                var loginUrl = GetFacebookLoginUrl(BBFacebook.App_Id, BBFacebook.ExtendedPermissions);
-                FBLoginBrowser.Navigate(loginUrl);
-            }
-            else 
-            {
-                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
-            }
-        }
+            ShowProgressBar(true);
 
+            var loginUrl = GetFacebookLoginUrl(FacebookAccount.App_Id, FacebookAccount.ExtendedPermissions);
+            FBLoginBrowser.Navigate(loginUrl);
+            
+            //if (String.IsNullOrEmpty(FacebookAccount.AccessToken))
+            //{
+            //    ShowProgressBar(true);
+
+            //    var loginUrl = GetFacebookLoginUrl(FacebookAccount.App_Id, FacebookAccount.ExtendedPermissions);
+            //    FBLoginBrowser.Navigate(loginUrl);
+            //}
+            //else
+            //{
+            //    NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
+            //}
+        }
 
         private Uri GetFacebookLoginUrl(string appId, string extendedPermissions)
         {
@@ -62,6 +68,8 @@ namespace BirthdayBumper.Views
 
         private void FBLoginBrowser_Navigated(object sender, NavigationEventArgs e)
         {
+            ShowProgressBar(true);
+
             FacebookOAuthResult oauthResult;
             if (!_fb.TryParseOAuthCallbackUrl(e.Uri, out oauthResult))
             {
@@ -71,8 +79,12 @@ namespace BirthdayBumper.Views
             if (oauthResult.IsSuccess)
             {
                 var token = oauthResult.AccessToken;
-                BBFacebook.AccessToken = oauthResult.AccessToken;
-                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
+                FacebookAccount.AccessToken = oauthResult.AccessToken;
+                FacebookAccount.IsConnected = true;
+
+                ShowProgressBar(false);
+
+                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml?from=facebook", UriKind.RelativeOrAbsolute));
             }
             else
             {
@@ -80,5 +92,25 @@ namespace BirthdayBumper.Views
                 MessageBox.Show(oauthResult.ErrorDescription);
             }
         }
+
+        private void FBLoginBrowser_LoadCompleted(object sender, NavigationEventArgs e)
+        {
+            ShowProgressBar(false);
+        }
+
+        private void ShowProgressBar(bool set)
+        {
+            if (set)
+            {
+                SystemTray.ProgressIndicator = new ProgressIndicator();
+            }
+            
+            if (SystemTray.ProgressIndicator != null)
+            {
+                SystemTray.ProgressIndicator.IsVisible = set;
+                SystemTray.ProgressIndicator.IsIndeterminate = set;
+            }
+        }
+
     }
 }

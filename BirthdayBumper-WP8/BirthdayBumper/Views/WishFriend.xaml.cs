@@ -19,10 +19,18 @@ namespace BirthdayBumper.Views
 
         private void WishFriendBrowser_Loaded(object sender, RoutedEventArgs e)
         {
-            string id;
-            if (NavigationContext.QueryString.TryGetValue("selectedItem", out id))
+            string site;
+            if (NavigationContext.QueryString.TryGetValue("site", out site))
             {
-                WishFriendBrowser.Navigate(new Uri("https://www.facebook.com/" + id));
+                if (!string.IsNullOrEmpty(site))
+                {
+                    WishFriendBrowser.Navigate(new Uri(site));
+                }
+                else 
+                {
+                    MessageBox.Show("Entity site not present.");
+                    NavigationService.GoBack();
+                }
 
                 //string jsFunc = "function(){ var x = querySelectorAll('textarea.textInput')[0]; x.innerHTML = \"Happy Birthday!\" }";   
             }

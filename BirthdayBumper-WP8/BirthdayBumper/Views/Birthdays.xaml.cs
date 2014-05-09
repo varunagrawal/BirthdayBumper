@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -12,6 +13,7 @@ using Microsoft.Phone.Scheduler;
 using Facebook;
 using BirthdayBumper.Models;
 using BirthdayBumper.ViewModels;
+using Microsoft.Phone.Net.NetworkInformation;
 
 namespace BirthdayBumper.Views
 {
@@ -19,12 +21,33 @@ namespace BirthdayBumper.Views
     {
         bool BirthdaysLoaded = false;
         FriendDataModel FriendData = new FriendDataModel();
+        Object lockObject = new Object();
+
+        // Variable to count the number of times layout has been updated and display progress bar acc.
+        static int i = -1;
 
         public Birthdays()
         {
             InitializeComponent();
+            this.Loaded += Birthdays_Loaded;            
         }
 
+        void Birthdays_Loaded(object sender, RoutedEventArgs e)
+        {
+            //SetupProgressBar();
+
+            if (!BirthdaysLoaded)
+            {
+                txtLoading.Visibility = System.Windows.Visibility.Visible;
+
+                GetFriendsBirthdays();
+
+                BirthdaysLoaded = true;
+
+                txtLoading.Visibility = System.Windows.Visibility.Collapsed;
+            }
+
+        }
 
         // Load data for the ViewModel Items
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -32,30 +55,58 @@ namespace BirthdayBumper.Views
             while(NavigationService.CanGoBack)
                 NavigationService.RemoveBackEntry();
 
-            if (!BirthdaysLoaded)
-            {
-                BirthdaysLoaded = true;
-                GetFriendsBirthdays();
+        }
 
+        private async void GetFriendsBirthdays()
+        {
+            // Check for Network Connectivity. If not available, then show message and exit.
+            if (!NetworkInterface.GetIsNetworkAvailable())
+            {
+                MessageBox.Show("No Network Connectivity." + Environment.NewLine + "Please check if you are connected to the Internet.");
+                return;
+            }
+
+            BirthdaysList.DataContext = null;
+
+            FriendData.Friends = new ObservableCollection<Friend>();
+
+            List<Friend> f = null, g = null;
+            List<Friend> friends = new List<Friend>();
+
+            if (FacebookAccount.IsConnected)
+            {
+                string site;
+                NavigationContext.QueryString.TryGetValue("from", out site);
+                if(site == "facebook")
+                {
+                    f = await FriendData.GetFacebookBirthdays();
+                    if (f != null)
+                        friends = friends.Concat(f).ToList<Friend>();
+                }
+                else
+                {
+                    NavigationService.Navigate(new Uri("/Views/FacebookLoginPage.xaml", UriKind.RelativeOrAbsolute));
+                    return;
+                }
+                
+            }
+
+            if (GoogleAccount.IsConnected)
+            {
+                g = await FriendData.GetGoogleBirthdays();
+                if (g != null)
+                    friends = friends.Concat(g).ToList<Friend>();
             }
             
-        }
+            FriendData.Friends = new ObservableCollection<Friend>(friends.Distinct().ToList<Friend>());
 
-        private void GetFriendsBirthdays()
-        {            
-            FriendData.FacebookBirthdays();
-
-            Load_Notify.Visibility = System.Windows.Visibility.Collapsed;
+            bool contactSearch = await FriendData.GetContactsBirthdays();
+            
+            CheckZeroBirthdays();
 
             BirthdaysList.DataContext = FriendData.Friends;
-
         }
 
-
-        private void ContactsFriendsBirthdays()
-        { 
-            
-        }
 
         // Handle selection changed on LongListSelector
         private void BirthdayList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -64,111 +115,37 @@ namespace BirthdayBumper.Views
             if (BirthdaysList.SelectedItem == null)
                 return;
 
-            FacebookFriend f = BirthdaysList.SelectedItem as FacebookFriend;
+            Friend f = BirthdaysList.SelectedItem as Friend;
 
             // Reset selected item to null (no selection)
             BirthdaysList.SelectedItem = null;
 
-            int index = BirthdaysList.ItemsSource.IndexOf(BirthdaysList.SelectedItem as FacebookFriend);
+            int index = BirthdaysList.ItemsSource.IndexOf(f);
             //FriendData.Friends.RemoveAt(index);
 
             // Navigate to the new page
-            NavigationService.Navigate(new Uri("/Views/WishFriend.xaml?selectedItem=" + f.Id, UriKind.RelativeOrAbsolute));
+            NavigationService.Navigate(new Uri("/Views/WishFriend.xaml?site=" + f.Site + "&type=" + f.GetType(), UriKind.RelativeOrAbsolute));
 
-
-            /*
-            if (!f.Wished)
-            {
-                f.Wished = true;
-
-                
-            }
-            else
-            {
-                MessageBox.Show("You already wished " + f.Name);
-            }
-            */
         }
 
-        //private void FacebookFriendsBirthdays()
-        //{
-        //    var fb = new FacebookClient(BBFacebook.AccessToken);
-
-        //    fb.GetCompleted += (o, e) =>
-        //    {
-        //        if (e.Error != null)
-        //        {
-        //            Dispatcher.BeginInvoke(() => MessageBox.Show(e.Error.Message));
-        //            return;
-        //        }
-
-        //        var result = (IDictionary<string, object>)e.GetResultData();
-        //        var data = (IEnumerable<object>)result["data"];
-
-
-        //        Dispatcher.BeginInvoke(() =>
-        //        {
-        //            FriendData = new FriendDataModel();
-
-        //            foreach (var item in data)
-        //            {
-        //                var friend = (IDictionary<string, object>)item;
-        //                if (friend.ContainsKey("birthday"))
-        //                {
-        //                    string[] Birthdate = ((string)friend["birthday"]).Split(new char[] { ' ', ',' });
-        //                    string m = DateTime.Now.ToString("MMMM");
-        //                    string d = DateTime.Now.Day.ToString();
-
-        //                    if (Birthdate[0] != m || Birthdate[1] != d)
-        //                        continue;
-
-        //                    if (Birthdate.Length == 3)
-        //                        FriendData.Friends.Add(new FacebookFriend
-        //                        (
-        //                            friend["uid"].ToString(),
-        //                            (string)friend["name"],
-        //                            Birthdate[1],
-        //                            Birthdate[0],
-        //                            Birthdate[2],
-        //                            new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
-        //                        ));
-        //                    else
-        //                        FriendData.Friends.Add(new FacebookFriend
-        //                        (
-        //                            friend["uid"].ToString(),
-        //                            (string)friend["name"],
-        //                            Birthdate[1],
-        //                            Birthdate[0],
-        //                            new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute)
-        //                        ));
-        //                }
-
-        //            }
-
-
-        //        });
-
-        //    };
-
-        //    string month = DateTime.Now.ToString("MMMM");
-        //    int day = DateTime.Now.Day;
-
-        //    fb.GetTaskAsync("fql",
-        //        new
-        //        {
-        //            q = string.Format("SELECT uid, name, birthday, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND strpos(birthday, '{0} {1}') >= 0", month, day)
-        //        });
-
-        //}
 
         private void Accounts_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Accounts: Yet to be implemented.");
+            NavigationService.Navigate(new Uri("/Views/Accounts.xaml", UriKind.RelativeOrAbsolute));
         }
 
         private void Refresh_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Accounts: Yet to be implemented.");
+            //SetupProgressBar();
+
+            lock(lockObject)
+            {
+                txtLoading.Visibility = System.Windows.Visibility.Visible;
+
+                GetFriendsBirthdays();
+
+                txtLoading.Visibility = System.Windows.Visibility.Collapsed;
+            }
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -176,6 +153,46 @@ namespace BirthdayBumper.Views
             MessageBox.Show("Delete From list function pending");
         }
 
+        private void CheckZeroBirthdays()
+        {
+            if(FriendData.Friends.Count == 0)
+            {
+                MessageBox.Show("No Birthdays today");
+
+                i = 0;
+            }
+        }
+
+        private void SetupProgressBar()
+        {
+            SystemTray.ProgressIndicator = new ProgressIndicator();
+            SystemTray.ProgressIndicator.IsIndeterminate = true;
+            SystemTray.ProgressIndicator.IsVisible = true;
+
+            ApplicationBar.IsVisible = false;
+
+            if (i < 7 || i == 9 || i == 12) // Values of i for which Progress of Bar should be displayed
+            {
+                i = 7;
+            }
+            else
+            {
+                i = 0;
+            }
+        }
+
+        private void BirthdaysList_LayoutUpdated(object sender, EventArgs e)
+        {
+            /*if (SystemTray.ProgressIndicator != null && (i > 7 || i == 0))
+            {
+                SystemTray.ProgressIndicator.IsIndeterminate = false;
+                SystemTray.ProgressIndicator.IsVisible = false;
+
+                ApplicationBar.IsVisible = true;
+            }
+
+            i++;*/
+        }
 
     }
 }

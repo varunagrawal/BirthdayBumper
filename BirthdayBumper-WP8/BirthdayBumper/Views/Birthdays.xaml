@@ -29,25 +29,24 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <phone:LongListSelector x:Name="BirthdaysList" HorizontalAlignment="Left" Height="482" VerticalAlignment="Top" Width="446" ItemsSource="{Binding}" SelectionChanged="BirthdayList_SelectionChanged">
+            <TextBlock x:Name="txtLoading" Text="Loading..." />
+            <phone:LongListSelector x:Name="BirthdaysList" HorizontalAlignment="Left" Height="482" VerticalAlignment="Top" Width="446" ItemsSource="{Binding}" SelectionChanged="BirthdayList_SelectionChanged" >
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Horizontal" Width="400" Margin="10,12,0,0">
-                                    <Image Source="{Binding Picture}" Height="60" Width="70" />
-                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" Width="220" />
+                                <StackPanel Orientation="Horizontal" Width="350" Margin="10,12,0,0">
+                                    <Image Source="{Binding Picture}" Height="80" Width="80" />
+                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" Width="250" />
                                 </StackPanel>
-                                <Button Name="btnDelete" Click="btnDelete_Click">
-                                    <Image Source="/Images/Delete.png" Height="30" Width="30" Margin="0,0,0,0" />    
-                                </Button>
+                                <!--Button Name="btnDelete" Click="btnDelete_Click">
+                                    <Image Source="/Images/Add.png" Height="30" Width="30" Margin="0,0,0,0" />
+                                </Button-->
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
                 </phone:LongListSelector.ItemTemplate>
             </phone:LongListSelector>
-
-            <TextBlock x:Name="Load_Notify" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Loading" VerticalAlignment="Top" Height="37" Width="201"/>
 
             <UI:AdControl ApplicationId="fecf31e4-2463-41d0-8b69-2081296382e8" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,445,0,0" IsAutoRefreshEnabled="True"/>
 

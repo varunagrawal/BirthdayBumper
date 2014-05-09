@@ -11,14 +11,12 @@ using BirthdayBumper.Resources;
 using Microsoft.Phone.Scheduler;
 using Microsoft.Phone.Net.NetworkInformation;
 
+using BirthdayBumper.ViewModels;
+
 namespace BirthdayBumper
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        PeriodicTask periodicTask;
-        string periodicTaskName = "PeriodicAgent";
-        
-
         // Constructor
         public MainPage()
         {
@@ -27,6 +25,9 @@ namespace BirthdayBumper
             this.Loaded += MainPage_Loaded;
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+
+            // Setup Toast Notifications for the App
+            //ToastNotificationSetup();
         }
 
 
@@ -39,12 +40,15 @@ namespace BirthdayBumper
                 Application.Current.Terminate();
             }
 
-            // Setup Toast Notifications for the App
-            PushNotificationSetup();
-
-            // Navigate to the Facebook Login Page
-            NavigationService.Navigate(new Uri("/Views/FacebookLoginPage.xaml", UriKind.RelativeOrAbsolute));
-            //NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
+            // Navigate to the Birthdays Page
+            if (!GoogleAccount.IsConnected && !FacebookAccount.IsConnected)
+            {
+                NavigationService.Navigate(new Uri("/Views/Accounts.xaml", UriKind.RelativeOrAbsolute));
+            }
+            else
+            {
+                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
+            }
         }
 
 
@@ -66,8 +70,11 @@ namespace BirthdayBumper
         //}
 
         
-        private void PushNotificationSetup()
+        private void ToastNotificationSetup()
         {
+            PeriodicTask periodicTask;
+            string periodicTaskName = "PeriodicAgent";
+        
             // Obtain a reference to the period task, if one exists
             periodicTask = ScheduledActionService.Find(periodicTaskName) as PeriodicTask;
 
@@ -77,10 +84,10 @@ namespace BirthdayBumper
             }
 
             periodicTask = new PeriodicTask(periodicTaskName);
-
+            
             // The description is required for periodic agents. This is the string that the user
             // will see in the background services Settings page on the device.
-            periodicTask.Description = "Birthday Wish reminding periodic task.";
+            periodicTask.Description = "BirthdayBumper Wish reminding periodic task.";
 
             // Place the call to Add in a try block in case the user has disabled agents.
             try
@@ -89,7 +96,7 @@ namespace BirthdayBumper
 
                 // If debugging is enabled, use LaunchForTest to launch the agent in one minute.
                 #if(DEBUG_AGENT)
-                    ScheduledActionService.LaunchForTest(periodicTaskName, TimeSpan.FromSeconds(10));
+                    ScheduledActionService.LaunchForTest(periodicTaskName, TimeSpan.FromSeconds(60));
                 #endif
             }
             catch (InvalidOperationException exception)

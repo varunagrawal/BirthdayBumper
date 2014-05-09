@@ -7,9 +7,12 @@ using System.Windows.Media.Imaging;
 
 namespace BirthdayBumper.Models
 {
+    /// <summary>
+    /// Facebook Friends
+    /// </summary>
     class FacebookFriend : Friend
     {
-        public FacebookFriend(string _id, string _name, string _day, string _month, string _year, Uri _pic)
+        public FacebookFriend(string _id, string _name, string _day, string _month, string _year, Uri _pic, string _site)
         {
             Id = _id;
             Name = _name;
@@ -18,17 +21,7 @@ namespace BirthdayBumper.Models
             Year = _year;
             Picture = new BitmapImage(_pic);
             Wished = false;
-        }
-
-
-        public FacebookFriend(string _id, string _name, string _day, string _month, Uri _pic)
-        {
-            Id = _id;
-            Name = _name;
-            Day = _day;
-            Month = _month;
-            Picture = new BitmapImage(_pic);
-            Wished = false;
+            Site = _site;
         }
 
     }

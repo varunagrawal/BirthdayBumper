@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
-  <App xmlns="" ProductID="{9fb59823-2c36-4c74-a614-b2b005cec608}" Title="BirthdayBumper" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="BirthdayBumper author" Description="Never forget a friend's birthday ever again!" Publisher="BirthdayBumper" PublisherID="{03ed6020-38c0-4294-bd07-c944861baaed}">
-    <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
+  <App xmlns="" ProductID="{9fb59823-2c36-4c74-a614-b2b005cec608}" Title="Birthday Bumper" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Varun Agrawal" Description="Never forget a friend's birthday ever again!" Publisher="VarTech" PublisherID="{03ed6020-38c0-4294-bd07-c944861baaed}">
+    <IconPath IsRelative="true" IsResource="false">Images\Icons\AppIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
       <Capability Name="ID_CAP_MEDIALIB_AUDIO" />
@@ -12,28 +12,32 @@
       <Capability Name="ID_CAP_IDENTITY_USER" />
       <Capability Name="ID_CAP_MEDIALIB_PHOTO" />
       <Capability Name="ID_CAP_PHONEDIALER" />
+      <Capability Name="ID_CAP_CONTACTS" />
     </Capabilities>
     <Tasks>
       <DefaultTask Name="_default" NavigationPage="MainPage.xaml" />
     </Tasks>
     <Tokens>
       <PrimaryToken TokenID="BirthdayBumperToken" TaskName="_default">
-        <TemplateFlip>
-          <SmallImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileSmall.png</SmallImageURI>
+        <TemplateIconic>
+          <SmallImageURI IsRelative="true" IsResource="false">Images\Icons\BB_White_Small.png</SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileMedium.png</BackgroundImageURI>
-          <Title>BirthdayBumper</Title>
-          <BackContent>
-          </BackContent>
-          <BackBackgroundImageURI>
-          </BackBackgroundImageURI>
-          <BackTitle>
-          </BackTitle>
-          <DeviceLockImageURI>
+          <IconImageURI IsRelative="true" IsResource="false">Images\Icons\BB_White_Medium.png</IconImageURI>
+          <Title>Birthday Bumper</Title>
+          <Message>
+          </Message>
+          <BackgroundColor>
+          </BackgroundColor>
+          <HasLarge>False</HasLarge>
+          <LargeContent1>
+          </LargeContent1>
+          <LargeContent2>
+          </LargeContent2>
+          <LargeContent3>
+          </LargeContent3>
+          <DeviceLockImageURI IsRelative="true" IsResource="false">
           </DeviceLockImageURI>
-          <HasLarge>
-          </HasLarge>
-        </TemplateFlip>
+        </TemplateIconic>
       </PrimaryToken>
     </Tokens>
     <ScreenResolutions>
