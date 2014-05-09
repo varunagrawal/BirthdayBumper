@@ -19,6 +19,8 @@ namespace BirthdayBumper.Views
 
         private void WishFriendBrowser_Loaded(object sender, RoutedEventArgs e)
         {
+            ShowProgressBar(true);
+
             string site;
             if (NavigationContext.QueryString.TryGetValue("site", out site))
             {
@@ -35,6 +37,25 @@ namespace BirthdayBumper.Views
                 //string jsFunc = "function(){ var x = querySelectorAll('textarea.textInput')[0]; x.innerHTML = \"Happy Birthday!\" }";   
             }
 
+        }
+
+        private void ShowProgressBar(bool set)
+        {
+            if (set)
+            {
+                SystemTray.ProgressIndicator = new ProgressIndicator();
+            }
+            
+            if (SystemTray.ProgressIndicator != null)
+            {
+                SystemTray.ProgressIndicator.IsIndeterminate = set;
+                SystemTray.ProgressIndicator.IsVisible = set;
+            }
+        }
+
+        private void WishFriendBrowser_LoadCompleted(object sender, NavigationEventArgs e)
+        {
+            ShowProgressBar(false);
         }
     }
 }

@@ -66,6 +66,10 @@ namespace BirthdayBumper.Views
                 return;
             }
 
+            SystemTray.ProgressIndicator = new ProgressIndicator();
+            SystemTray.ProgressIndicator.IsIndeterminate = true;
+            SystemTray.ProgressIndicator.IsVisible = true;
+
             BirthdaysList.DataContext = null;
 
             FriendData.Friends = new ObservableCollection<Friend>();
@@ -105,6 +109,16 @@ namespace BirthdayBumper.Views
             CheckZeroBirthdays();
 
             BirthdaysList.DataContext = FriendData.Friends;
+
+            this.Dispatcher.BeginInvoke( new System.Action(() =>
+            {
+                System.Threading.Thread.Sleep(4000);
+
+                SystemTray.ProgressIndicator.IsIndeterminate = false;
+                SystemTray.ProgressIndicator.IsVisible = false;
+                SystemTray.ProgressIndicator = null;
+            }));
+            
         }
 
 

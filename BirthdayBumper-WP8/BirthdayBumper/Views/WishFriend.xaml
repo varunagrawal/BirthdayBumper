@@ -28,7 +28,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <phone:WebBrowser x:Name="WishFriendBrowser" HorizontalAlignment="Left" VerticalAlignment="Top" Width="456" Height="607" IsScriptEnabled="True" Loaded="WishFriendBrowser_Loaded" />
+            <phone:WebBrowser x:Name="WishFriendBrowser" HorizontalAlignment="Left" VerticalAlignment="Top" Width="456" Height="607" IsScriptEnabled="True" Loaded="WishFriendBrowser_Loaded" LoadCompleted="WishFriendBrowser_LoadCompleted" />
 
         </Grid>
     </Grid>
