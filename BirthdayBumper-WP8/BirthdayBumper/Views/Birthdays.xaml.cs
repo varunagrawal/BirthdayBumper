@@ -14,6 +14,7 @@ using Facebook;
 using BirthdayBumper.Models;
 using BirthdayBumper.ViewModels;
 using Microsoft.Phone.Net.NetworkInformation;
+using System.Windows.Data;
 
 namespace BirthdayBumper.Views
 {
@@ -29,11 +30,23 @@ namespace BirthdayBumper.Views
         public Birthdays()
         {
             InitializeComponent();
+            //_viewModel = (FriendDataModel)Resources["viewModel"];
             this.Loaded += Birthdays_Loaded;            
         }
 
         void Birthdays_Loaded(object sender, RoutedEventArgs e)
         {
+            SystemTray.ProgressIndicator = new ProgressIndicator();
+
+            Binding binding = new Binding("IsLoading") { Source = FriendData };
+            BindingOperations.SetBinding(
+                SystemTray.ProgressIndicator, ProgressIndicator.IsVisibleProperty, binding);
+
+            binding = new Binding("IsLoading") { Source = FriendData };
+            BindingOperations.SetBinding(
+                SystemTray.ProgressIndicator, ProgressIndicator.IsIndeterminateProperty, binding);
+
+            SystemTray.ProgressIndicator.Text = "Loading birthdays...";
             //SetupProgressBar();
 
             if (!BirthdaysLoaded)
@@ -66,13 +79,14 @@ namespace BirthdayBumper.Views
                 return;
             }
 
-            SystemTray.ProgressIndicator = new ProgressIndicator();
-            SystemTray.ProgressIndicator.IsIndeterminate = true;
-            SystemTray.ProgressIndicator.IsVisible = true;
+            //SystemTray.ProgressIndicator = new ProgressIndicator();
+            //SystemTray.ProgressIndicator.IsIndeterminate = true;
+            //SystemTray.ProgressIndicator.IsVisible = true;
 
             BirthdaysList.DataContext = null;
 
             FriendData.Friends = new ObservableCollection<Friend>();
+            FriendData.IsLoading = true;
 
             List<Friend> f = null, g = null;
             List<Friend> friends = new List<Friend>();
@@ -110,14 +124,16 @@ namespace BirthdayBumper.Views
 
             BirthdaysList.DataContext = FriendData.Friends;
 
-            this.Dispatcher.BeginInvoke( new System.Action(() =>
-            {
-                System.Threading.Thread.Sleep(4000);
+            FriendData.IsLoading = false;
 
-                SystemTray.ProgressIndicator.IsIndeterminate = false;
-                SystemTray.ProgressIndicator.IsVisible = false;
-                SystemTray.ProgressIndicator = null;
-            }));
+            //this.Dispatcher.BeginInvoke( new System.Action(() =>
+            //{
+            //    System.Threading.Thread.Sleep(4000);
+
+            //    SystemTray.ProgressIndicator.IsIndeterminate = false;
+            //    SystemTray.ProgressIndicator.IsVisible = false;
+            //    SystemTray.ProgressIndicator = null;
+            //}));
             
         }
 

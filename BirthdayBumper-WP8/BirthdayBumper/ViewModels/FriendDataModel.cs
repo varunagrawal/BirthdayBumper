@@ -15,12 +15,29 @@ using BirthdayBumper.Models;
 using System.Net.Http;
 using System.IO;
 using System.Xml.Serialization;
+using System.ComponentModel;
 
 namespace BirthdayBumper.ViewModels
 {
-    class FriendDataModel
+    class FriendDataModel : INotifyPropertyChanged
     {
         public ObservableCollection<Friend> Friends;
+
+        private bool _isLoading = false;
+
+        public bool IsLoading
+        {
+            get
+            {
+                return _isLoading;
+            }
+            set
+            {
+                _isLoading = value;
+                NotifyPropertyChanged("IsLoading");
+
+            }
+        }
 
         /// <summary>
         /// Get Birthdays of Phone Contacts
@@ -101,6 +118,16 @@ namespace BirthdayBumper.ViewModels
             foreach (Friend f in list)
             {
                 Friends.Add(f);
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (null != handler)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }
