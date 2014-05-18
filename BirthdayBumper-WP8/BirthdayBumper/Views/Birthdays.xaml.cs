@@ -15,12 +15,12 @@ using BirthdayBumper.Models;
 using BirthdayBumper.ViewModels;
 using Microsoft.Phone.Net.NetworkInformation;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace BirthdayBumper.Views
 {
     public partial class Birthdays : PhoneApplicationPage
     {
-        bool BirthdaysLoaded = false;
         FriendDataModel FriendData = new FriendDataModel();
         Object lockObject = new Object();
 
@@ -30,36 +30,46 @@ namespace BirthdayBumper.Views
         public Birthdays()
         {
             InitializeComponent();
-            //_viewModel = (FriendDataModel)Resources["viewModel"];
             this.Loaded += Birthdays_Loaded;            
         }
 
         void Birthdays_Loaded(object sender, RoutedEventArgs e)
         {
+            LoadBirthdays();
+        }
+
+        private void LoadBirthdays()
+        {
             SystemTray.ProgressIndicator = new ProgressIndicator();
 
-            Binding binding = new Binding("IsLoading") { Source = FriendData };
-            BindingOperations.SetBinding(
-                SystemTray.ProgressIndicator, ProgressIndicator.IsVisibleProperty, binding);
+            //Binding binding = new Binding("IsLoading") { Source = FriendData };
+            //BindingOperations.SetBinding(
+            //    SystemTray.ProgressIndicator, ProgressIndicator.IsVisibleProperty, binding);
 
-            binding = new Binding("IsLoading") { Source = FriendData };
-            BindingOperations.SetBinding(
-                SystemTray.ProgressIndicator, ProgressIndicator.IsIndeterminateProperty, binding);
+            //binding = new Binding("IsLoading") { Source = FriendData };
+            //BindingOperations.SetBinding(
+            //    SystemTray.ProgressIndicator, ProgressIndicator.IsIndeterminateProperty, binding);
 
-            SystemTray.ProgressIndicator.Text = "Loading birthdays...";
-            //SetupProgressBar();
+            //SystemTray.ProgressIndicator.Text = "Loading birthdays...";
 
-            if (!BirthdaysLoaded)
+            txtLoading.Visibility = System.Windows.Visibility.Visible;
+            SetProgressBar(true);
+
+            GetFriendsBirthdays();
+
+            txtLoading.Visibility = System.Windows.Visibility.Collapsed;
+
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(5000);
+
+            timer.Tick += (timer_sender, timer_args) =>
             {
-                txtLoading.Visibility = System.Windows.Visibility.Visible;
+                SetProgressBar(false);
+                timer.Stop();
+            };
 
-                GetFriendsBirthdays();
-
-                BirthdaysLoaded = true;
-
-                txtLoading.Visibility = System.Windows.Visibility.Collapsed;
-            }
-
+            timer.Start();
         }
 
         // Load data for the ViewModel Items
@@ -78,10 +88,6 @@ namespace BirthdayBumper.Views
                 MessageBox.Show("No Network Connectivity." + Environment.NewLine + "Please check if you are connected to the Internet.");
                 return;
             }
-
-            //SystemTray.ProgressIndicator = new ProgressIndicator();
-            //SystemTray.ProgressIndicator.IsIndeterminate = true;
-            //SystemTray.ProgressIndicator.IsVisible = true;
 
             BirthdaysList.DataContext = null;
 
@@ -126,15 +132,6 @@ namespace BirthdayBumper.Views
 
             FriendData.IsLoading = false;
 
-            //this.Dispatcher.BeginInvoke( new System.Action(() =>
-            //{
-            //    System.Threading.Thread.Sleep(4000);
-
-            //    SystemTray.ProgressIndicator.IsIndeterminate = false;
-            //    SystemTray.ProgressIndicator.IsVisible = false;
-            //    SystemTray.ProgressIndicator = null;
-            //}));
-            
         }
 
 
@@ -166,15 +163,9 @@ namespace BirthdayBumper.Views
 
         private void Refresh_Click(object sender, EventArgs e)
         {
-            //SetupProgressBar();
-
             lock(lockObject)
             {
-                txtLoading.Visibility = System.Windows.Visibility.Visible;
-
-                GetFriendsBirthdays();
-
-                txtLoading.Visibility = System.Windows.Visibility.Collapsed;
+                LoadBirthdays();
             }
         }
 
@@ -188,40 +179,25 @@ namespace BirthdayBumper.Views
             if(FriendData.Friends.Count == 0)
             {
                 MessageBox.Show("No Birthdays today");
-
-                i = 0;
             }
         }
 
-        private void SetupProgressBar()
+        private void SetProgressBar(bool isVisible)
         {
-            SystemTray.ProgressIndicator = new ProgressIndicator();
-            SystemTray.ProgressIndicator.IsIndeterminate = true;
-            SystemTray.ProgressIndicator.IsVisible = true;
+            SystemTray.ProgressIndicator.IsIndeterminate = isVisible;
+            SystemTray.ProgressIndicator.IsVisible = isVisible;
 
-            ApplicationBar.IsVisible = false;
-
-            if (i < 7 || i == 9 || i == 12) // Values of i for which Progress of Bar should be displayed
-            {
-                i = 7;
-            }
-            else
-            {
-                i = 0;
-            }
+            ApplicationBar.IsVisible = !isVisible;
         }
 
-        private void BirthdaysList_LayoutUpdated(object sender, EventArgs e)
+        private void About_Click(object sender, EventArgs e)
         {
-            /*if (SystemTray.ProgressIndicator != null && (i > 7 || i == 0))
-            {
-                SystemTray.ProgressIndicator.IsIndeterminate = false;
-                SystemTray.ProgressIndicator.IsVisible = false;
+            MessageBox.Show("Birthday Bumper developed by Varun Agrawal and Prakhar Gupta");
+        }
 
-                ApplicationBar.IsVisible = true;
-            }
-
-            i++;*/
+        private void Readme_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("All birthdays may not be visible due to Privacy settings of the people in your social network.");
         }
 
     }

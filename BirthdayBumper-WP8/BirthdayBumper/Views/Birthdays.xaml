@@ -48,7 +48,7 @@
                 </phone:LongListSelector.ItemTemplate>
             </phone:LongListSelector>
 
-            <UI:AdControl ApplicationId="fecf31e4-2463-41d0-8b69-2081296382e8" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,445,0,0" IsAutoRefreshEnabled="True"/>
+            <UI:AdControl ApplicationId="69dfb837-b94b-414c-8fdb-7bb15d601ec0" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,445,0,0" IsAutoRefreshEnabled="True"/>
 
         </Grid>
     </Grid>
@@ -57,6 +57,10 @@
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton x:Name="Accounts" IconUri="/Images/Configuration.png" Text="Accounts" Click="Accounts_Click" />
             <shell:ApplicationBarIconButton x:Name="Refresh" IconUri="/Images/Refresh.png" Text="Refresh" Click="Refresh_Click" />
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem x:Name="About" Text="About" Click="About_Click" />
+                <shell:ApplicationBarMenuItem x:Name="Readme" Text="Readme" Click="Readme_Click" />
+            </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

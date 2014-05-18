@@ -173,14 +173,14 @@ namespace BirthdayBumper.ViewModels
 
         public static async Task<bool> Authorize(string AuthCode)
         {
+            IsConnected = false;
+
             if (!string.IsNullOrEmpty(AccessToken))
             {
                 RefreshAccessToken();
 
                 return IsConnected;
             }
-
-            isConnected = false;
 
             var values = new List<KeyValuePair<string, string>>
             {
@@ -212,13 +212,19 @@ namespace BirthdayBumper.ViewModels
                 new KeyValuePair<string, string>("client_secret", ClientSecret),
                 new KeyValuePair<string, string>("grant_type", "refresh_token")
             };
-            HttpClient httpClient = new HttpClient();
-            HttpResponseMessage response = await httpClient.PostAsync(TokenUri, new FormUrlEncodedContent(values));
-            response.EnsureSuccessStatusCode();
 
-            var responseString = await response.Content.ReadAsStringAsync();
-            SetAuthorization(responseString, true);
+            try
+            {
+                HttpClient httpClient = new HttpClient();
+                HttpResponseMessage response = await httpClient.PostAsync(TokenUri, new FormUrlEncodedContent(values));
+                response.EnsureSuccessStatusCode();
 
+                var responseString = await response.Content.ReadAsStringAsync();
+                SetAuthorization(responseString, true);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public static void SetAuthorization(string tokenString, bool refresh)
@@ -248,6 +254,8 @@ namespace BirthdayBumper.ViewModels
         public static async Task<List<Friend>> GetGoogleBirthdays()
         {
             List<Friend> Friends = new List<Friend>();
+
+            RefreshAccessToken();
 
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync(new Uri("https://www.google.com/m8/feeds/contacts/default/full?access_token=" + GoogleAccount.AccessToken + "&v=3.0&max-results=10000"));
