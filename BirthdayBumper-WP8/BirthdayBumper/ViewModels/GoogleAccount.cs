@@ -287,24 +287,20 @@ namespace BirthdayBumper.ViewModels
                 {
                     string[] birthday = e.Birthday.Date.Split(new char[] { '-' });
 
-                    int m = DateTime.Now.Month;
-                    int d = DateTime.Now.Day;
-                    int day = int.Parse(birthday[birthday.Length - 1]);
-                    int month = int.Parse(birthday[birthday.Length - 2]);
-                    string year = "0";
-
-                    string image = e.Links.Where(x => x.Type.Contains("image")).First<Link>().Image + "&access_token=" + GoogleAccount.AccessToken;
-
+                    string day = birthday[birthday.Length - 1];
+                    string month = birthday[birthday.Length - 2];
+                    
+                    string year = "";
                     if (birthday.Length == 3)
                         year = (birthday[0]);
+
+                    string image = e.Links.Where(x => x.Type.Contains("image")).First<Link>().Image + "&access_token=" + GoogleAccount.AccessToken;
 
                     string site = "";
                     if (e.Websites != null && e.Websites.Count > 0)
                         site = e.Websites.First().Url;
 
-                    if (d == day && m == month)
-                    {
-                        Friends.Add(new GoogleFriend
+                    Friends.Add(new GoogleFriend
                         (
                             e.Id,
                             e.Name.FullName,
@@ -314,9 +310,6 @@ namespace BirthdayBumper.ViewModels
                             new Uri(image, UriKind.RelativeOrAbsolute),
                             site
                         ));
-
-                    }
-
 
                 }
             }

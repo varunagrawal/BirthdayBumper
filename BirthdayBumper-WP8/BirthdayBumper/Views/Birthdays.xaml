@@ -51,7 +51,7 @@
                 </phone:LongListSelector.ItemTemplate>
             </phone:LongListSelector>
 
-            <UI:AdControl ApplicationId="69dfb837-b94b-414c-8fdb-7bb15d601ec0" AdUnitId="10172900" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,445,0,0" IsAutoRefreshEnabled="True"/>
+            <UI:AdControl ApplicationId="69dfb837-b94b-414c-8fdb-7bb15d601ec0" AdUnitId="10737407" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,445,0,0" IsAutoRefreshEnabled="True"/>
 
         </Grid>
     </Grid>

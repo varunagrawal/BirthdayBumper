@@ -163,7 +163,7 @@ namespace BirthdayBumper.Views
 
             List<Friend> friends = new List<Friend>();
 
-            #region FB Friends
+            #region Facebook Friends
             if (FacebookAccount.IsConnected)
             {
                 string site;
