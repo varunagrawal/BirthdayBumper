@@ -65,7 +65,14 @@ namespace BirthdayBumper.ViewModels
             {
                 try
                 {
-                    isConnected = (bool)appSettings["facebook_isOnline"];
+                    if (appSettings.Contains("facebook_isOnline"))
+                    {
+                        isConnected = (bool)appSettings["facebook_isOnline"];
+                    }
+                    else
+                    {
+                        isConnected = false;
+                    }
                 }
                 catch (KeyNotFoundException e)
                 {
@@ -101,16 +108,17 @@ namespace BirthdayBumper.ViewModels
 
             List<Friend> Friends = new List<Friend>();
 
-            string month = DateTime.Now.ToString("MMMM");
-            int day = DateTime.Now.Day;
+            //string month = DateTime.Now.ToString("MMMM");
+            //int day = DateTime.Now.Day;
 
             try
             {
                 object fb_data = await fb.GetTaskAsync("fql",
                     new
                     {
-                        q = string.Format("SELECT uid, name, birthday, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND strpos(birthday, '{0} {1}') >= 0", month, day)
-                        //q = string.Format("SELECT uid, name, birthday, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) >= 0")
+                        q = string.Format("SELECT uid, name, birthday, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())")
+                        //q = string.Format("SELECT uid, name, birthday, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND strpos(birthday, '{0} {1}') >= 0", month, day)
+
                     });
 
                 var result = fb_data as IDictionary<string, object>;
@@ -118,28 +126,41 @@ namespace BirthdayBumper.ViewModels
 
                 foreach (var item in data)
                 {
-                    var friend = (IDictionary<string, object>)item;
-                    if (friend.ContainsKey("birthday"))
+                    try
                     {
-                        string[] Birthdate = ((string)friend["birthday"]).Split(new char[] { ' ', ',' });
-                        string m = DateTime.Now.ToString("MMMM");
-                        string d = DateTime.Now.Day.ToString();
-                        string year = Birthdate.Length == 3 ? Birthdate[2] : "";
+                        string[] Birthdate = { "", "" };
+                        string year = "";
 
-                        if (Birthdate[0] == m && Birthdate[1] == d)
+                        var friend = (IDictionary<string, object>)item;
+                        if (friend.ContainsKey("birthday"))
                         {
-                            Friends.Add(new FacebookFriend
-                            (
-                                friend["uid"].ToString(),
-                                (string)friend["name"],
-                                Birthdate[1],
-                                Birthdate[0],
-                                year,
-                                new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute),
-                                "https://www.facebook.com/" + friend["uid"].ToString()
-                            ));
-                        }
+                        
+                            var friend_birthday = friend["birthday"];
+                            if (friend_birthday != null)
+                            {
+                                Birthdate = ((string)friend["birthday"]).Split(new char[] { ' ', ',' });
+                                year = Birthdate.Length == 3 ? Birthdate[2] : "";    
+                            }
 
+                            Friends.Add(new FacebookFriend
+                                (
+                                    friend["uid"].ToString(),
+                                    (string)friend["name"],
+                                    Birthdate[1],
+                                    Birthdate[0],
+                                    year,
+                                    new Uri((string)friend["pic_square"], UriKind.RelativeOrAbsolute),
+                                    "https://www.facebook.com/" + friend["uid"].ToString()
+                                ));
+
+                            //if (Birthdate[0] == m && Birthdate[1] == d)
+                            //{    
+                            //}
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
                     }
 
                 }

@@ -16,124 +16,203 @@ using BirthdayBumper.ViewModels;
 using Microsoft.Phone.Net.NetworkInformation;
 using System.Windows.Data;
 using System.Windows.Threading;
+using System.ComponentModel;
+using System.IO.IsolatedStorage;
+using System.Threading.Tasks;
 
 namespace BirthdayBumper.Views
 {
-    public partial class Birthdays : PhoneApplicationPage
+    public partial class Birthdays : PhoneApplicationPage, INotifyPropertyChanged
     {
-        FriendDataModel FriendData = new FriendDataModel();
-        Object lockObject = new Object();
+        private BirthdayBumperContext birthdayDB;
 
-        // Variable to count the number of times layout has been updated and display progress bar acc.
-        static int i = -1;
+        // Define an observable collection property that controls can bind to.
+        private ObservableCollection<Friend> _friends;
+        public ObservableCollection<Friend> Friends
+        {
+            get
+            {
+                return _friends;
+            }
+            set
+            {
+                if (_friends != value)
+                {
+                    _friends = value;
+                    NotifyPropertyChanged("Friends");
+                }
+            }
+        }
+
+        FriendDataModel FriendData = new FriendDataModel();
 
         public Birthdays()
         {
             InitializeComponent();
+
+            // Connect to the database and instantiate data context.
+            birthdayDB = new BirthdayBumperContext(BirthdayBumperContext.DBConnectionString);
+
+            // Data context and observable collection are children of the main page.
+            this.DataContext = this;
+
             this.Loaded += Birthdays_Loaded;            
         }
 
-        void Birthdays_Loaded(object sender, RoutedEventArgs e)
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        // Used to notify the app that a property has changed.
+        private void NotifyPropertyChanged(string propertyName)
         {
-            LoadBirthdays();
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
+
+        // Load data for the ViewModel Items
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            while (NavigationService.CanGoBack)
+                NavigationService.RemoveBackEntry();
+
+            IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+
+            bool done = false;
+
+            SystemTray.ProgressIndicator = new ProgressIndicator();
+            SystemTray.ProgressIndicator.Text = "Loading birthdays...";
+
+            txtLoading.Visibility = System.Windows.Visibility.Visible;
+            SetProgressBar(true);
+            ApplicationBar.IsVisible = false;
+
+            if (!settings.Contains("AlreadyLoggedIn"))
+            {
+                done = await GetAndStoreBirthdays();
+
+                settings.Add("AlreadyLoggedIn", true);
+            }
+            else
+            {
+                done = true;
+            }
+
+            if (done)
+            {
+                LoadBirthdays();
+            }
+
+            txtLoading.Visibility = System.Windows.Visibility.Collapsed;
+            SetProgressBar(false);
+            ApplicationBar.IsVisible = true;
+
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+
+            this.Loaded -= Birthdays_Loaded;
+        }
+
+        void Birthdays_Loaded(object sender, RoutedEventArgs e)
+        {   
         }
 
         private void LoadBirthdays()
         {
-            SystemTray.ProgressIndicator = new ProgressIndicator();
+            BirthdaysList.DataContext = null;
 
-            //Binding binding = new Binding("IsLoading") { Source = FriendData };
-            //BindingOperations.SetBinding(
-            //    SystemTray.ProgressIndicator, ProgressIndicator.IsVisibleProperty, binding);
+            FriendData.IsLoading = true;
 
-            //binding = new Binding("IsLoading") { Source = FriendData };
-            //BindingOperations.SetBinding(
-            //    SystemTray.ProgressIndicator, ProgressIndicator.IsIndeterminateProperty, binding);
-
-            //SystemTray.ProgressIndicator.Text = "Loading birthdays...";
-
-            txtLoading.Visibility = System.Windows.Visibility.Visible;
-            SetProgressBar(true);
-
-            GetFriendsBirthdays();
-
-            txtLoading.Visibility = System.Windows.Visibility.Collapsed;
-
-
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(5000);
-
-            timer.Tick += (timer_sender, timer_args) =>
+            using (birthdayDB = new BirthdayBumperContext(BirthdayBumperContext.DBConnectionString))
             {
-                SetProgressBar(false);
-                timer.Stop();
-            };
+                string m = DateTime.Now.ToString("MMMM");
+                string d = DateTime.Now.Day.ToString();
 
-            timer.Start();
+                // Define the query to gather all of the to-do items.
+                var friendsInDB = from Friend friend in birthdayDB.Friends
+                                  where friend.Day == d && friend.Month == m
+                                  select friend;
+
+                // Execute the query and place the results into a collection.
+                FriendData.Friends = new ObservableCollection<Friend>(friendsInDB);
+
+                BirthdaysList.DataContext = FriendData.Friends;
+            }
+            
+            FriendData.IsLoading = false;
+
+            CheckZeroBirthdays();
+
         }
 
-        // Load data for the ViewModel Items
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            while(NavigationService.CanGoBack)
-                NavigationService.RemoveBackEntry();
-
-        }
-
-        private async void GetFriendsBirthdays()
+        // Retrieve Birthday information from social networks / contacts and store it in local database.
+        private async Task<bool> GetAndStoreBirthdays()
         {
             // Check for Network Connectivity. If not available, then show message and exit.
             if (!NetworkInterface.GetIsNetworkAvailable())
             {
                 MessageBox.Show("No Network Connectivity." + Environment.NewLine + "Please check if you are connected to the Internet.");
-                return;
+                return false;
             }
 
-            BirthdaysList.DataContext = null;
-
-            FriendData.Friends = new ObservableCollection<Friend>();
-            FriendData.IsLoading = true;
-
-            List<Friend> f = null, g = null;
             List<Friend> friends = new List<Friend>();
 
+            #region FB Friends
             if (FacebookAccount.IsConnected)
             {
                 string site;
                 NavigationContext.QueryString.TryGetValue("from", out site);
-                if(site == "facebook")
+                if (site == "facebook")
                 {
-                    f = await FriendData.GetFacebookBirthdays();
+                    List<Friend> f = await FriendData.GetFacebookBirthdays();
                     if (f != null)
                         friends = friends.Concat(f).ToList<Friend>();
                 }
                 else
                 {
                     NavigationService.Navigate(new Uri("/Views/FacebookLoginPage.xaml", UriKind.RelativeOrAbsolute));
-                    return;
                 }
-                
             }
+            #endregion
 
+            #region Google Friends
             if (GoogleAccount.IsConnected)
             {
-                g = await FriendData.GetGoogleBirthdays();
+                List<Friend> g = await FriendData.GetGoogleBirthdays();
                 if (g != null)
                     friends = friends.Concat(g).ToList<Friend>();
             }
-            
-            FriendData.Friends = new ObservableCollection<Friend>(friends.Distinct().ToList<Friend>());
+            #endregion
 
-            bool contactSearch = await FriendData.GetContactsBirthdays();
-            
-            CheckZeroBirthdays();
+            using (birthdayDB = new BirthdayBumperContext(BirthdayBumperContext.DBConnectionString))
+            {
+                // Define the query to gather all of the to-do items.
+                var friendsInDB = from Friend friend in birthdayDB.Friends
+                                  select friend;
 
-            BirthdaysList.DataContext = FriendData.Friends;
+                // Execute the query and place the results into a collection.
+                var dbFriends = new ObservableCollection<Friend>(friendsInDB);
 
-            FriendData.IsLoading = false;
+                birthdayDB.Friends.DeleteAllOnSubmit(dbFriends);
+                birthdayDB.SubmitChanges(System.Data.Linq.ConflictMode.ContinueOnConflict);
 
+                birthdayDB.Friends.InsertAllOnSubmit(friends);
+                birthdayDB.SubmitChanges(System.Data.Linq.ConflictMode.ContinueOnConflict);
+            }
+
+
+            //bool contactSearch = false;
+            //while(!contactSearch)
+            //    contactSearch = await FriendData.GetContactsBirthdays();
+
+            return true;
         }
-
 
         // Handle selection changed on LongListSelector
         private void BirthdayList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -163,13 +242,14 @@ namespace BirthdayBumper.Views
 
         private void Refresh_Click(object sender, EventArgs e)
         {
-            lock(lockObject)
-            {
-                LoadBirthdays();
-            }
+            ApplicationBar.IsVisible = false;
+
+            LoadBirthdays();
+
+            ApplicationBar.IsVisible = true;
         }
 
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private void deleteTaskButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Delete From list function pending");
         }
@@ -182,12 +262,16 @@ namespace BirthdayBumper.Views
             }
         }
 
-        private void SetProgressBar(bool isVisible)
+        private void SetProgressBar(bool enable)
         {
-            SystemTray.ProgressIndicator.IsIndeterminate = isVisible;
-            SystemTray.ProgressIndicator.IsVisible = isVisible;
+            if (enable)
+            {
+            }
 
-            ApplicationBar.IsVisible = !isVisible;
+            SystemTray.ProgressIndicator.IsIndeterminate = enable;
+            SystemTray.ProgressIndicator.IsVisible = enable;
+
+            //ApplicationBar.IsVisible = !isVisible;
         }
 
         private void About_Click(object sender, EventArgs e)
@@ -198,6 +282,22 @@ namespace BirthdayBumper.Views
         private void Readme_Click(object sender, EventArgs e)
         {
             MessageBox.Show("All birthdays may not be visible due to Privacy settings of the people in your social network.");
+        }
+
+        private async void Sync_Click(object sender, EventArgs e)
+        {
+            SetProgressBar(true);
+            ApplicationBar.IsVisible = false;
+
+            bool refreshed = await GetAndStoreBirthdays();
+
+            if (refreshed)
+            {
+                LoadBirthdays();
+            }
+
+            SetProgressBar(false);
+            ApplicationBar.IsVisible = true;
         }
 
     }

@@ -12,7 +12,7 @@ namespace BirthdayBumper.Models
     /// </summary>
     class ContactFriend : Friend
     {
-        public ContactFriend(string _id, string _name, string _day, string _month, string _year, BitmapImage _pic)
+        public ContactFriend(string _id, string _name, string _day, string _month, string _year, string _pic)
         {
             Id = _id;
             Name = _name;

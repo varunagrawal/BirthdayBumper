@@ -30,7 +30,6 @@ namespace BirthdayBumper
             //ToastNotificationSetup();
         }
 
-
         void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             // Check for Network Connectivity. If not available, then show message and exit.

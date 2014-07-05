@@ -46,6 +46,8 @@ namespace BirthdayBumper.ViewModels
         {
             TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
 
+            ObservableCollection<Friend> ContactFriends = new ObservableCollection<Friend>();
+
             Contacts cons = new Contacts();
 
             cons.SearchCompleted += (sender, e) =>
@@ -59,39 +61,45 @@ namespace BirthdayBumper.ViewModels
                     tcs.TrySetResult(true);
                 }
 
-                foreach (var c in contacts)
+                using (BirthdayBumperContext db = new BirthdayBumperContext(BirthdayBumperContext.DBConnectionString))
                 {
-                    DateTime d = DateTime.Now.AddDays(-1.0);
-
-                    List<DateTime> birthdays = new List<DateTime>(c.Birthdays);
-                    if (birthdays.Count > 0)
-                        d = birthdays.First<DateTime>();
-
-                    try
+                    foreach (var c in contacts)
                     {
-                        if (d.Date.Equals(DateTime.Today.Date))
+                        DateTime d = DateTime.Now.AddDays(-1.0);
+
+                        List<DateTime> birthdays = new List<DateTime>(c.Birthdays);
+                        if (birthdays.Count > 0)
+                            d = birthdays.First<DateTime>();
+
+                        try
                         {
-                            BitmapImage img = new BitmapImage();
-                            img.SetSource(c.GetPicture());
+                            if (d.Date.Equals(DateTime.Today.Date))
+                            {
+                                //BitmapImage img = new BitmapImage();
+                                //img.SetSource(c.GetPicture());
 
-                            ContactFriend f = new ContactFriend(
-                                //c.GetHashCode().ToString(),
-                                c.PhoneNumbers.First().ToString(),
-                                c.CompleteName.ToString(),
-                                d.Day.ToString(),
-                                d.Month.ToString(),
-                                d.Year.ToString(),
-                                img);
+                                ContactFriend f = new ContactFriend(
+                                    //c.GetHashCode().ToString(),
+                                    c.PhoneNumbers.First() != null ? c.PhoneNumbers.First().ToString() : c.GetHashCode().ToString(),
+                                    c.CompleteName.ToString(),
+                                    d.Day.ToString(),
+                                    d.Month.ToString(),
+                                    d.Year.ToString(),
+                                    "ContactImage"
+                                    );
 
-                            Friends.Add(f);
+                                ContactFriends.Add(f);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine(ex.Message);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
-                    }
-                }
 
+                    db.Friends.InsertAllOnSubmit(ContactFriends);
+                }
+                
                 tcs.TrySetResult(true);
             };
 

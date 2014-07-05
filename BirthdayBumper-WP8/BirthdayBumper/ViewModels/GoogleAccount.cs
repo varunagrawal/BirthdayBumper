@@ -145,7 +145,14 @@ namespace BirthdayBumper.ViewModels
             {
                 try
                 {
-                    isConnected = (bool)appSettings["google_isOnline"];
+                    if (appSettings.Contains("google_isOnline"))
+                    {
+                        isConnected = (bool)appSettings["google_isOnline"];
+                    }
+                    else
+                    {
+                        isConnected = false;
+                    }
                 }
                 catch (KeyNotFoundException e)
                 {

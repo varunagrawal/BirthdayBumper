@@ -97,6 +97,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\BirthdayBumperContext.cs" />
     <Compile Include="ViewModels\FacebookAccount.cs" />
     <Compile Include="Models\ContactFriend.cs" />
     <Compile Include="Models\FacebookFriend.cs" />
@@ -191,9 +192,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Configuration.png" />
-    <Content Include="Images\Delete.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Images\Delete.png" />
     <Content Include="Images\Erase.png" />
     <Content Include="Images\Icons\AppIcon.png" />
     <Content Include="Images\Icons\BB_AppIcon.png" />
@@ -201,6 +200,7 @@
     <Content Include="Images\Icons\BB_White_Medium.png" />
     <Content Include="Images\Icons\BB_White_Small.png" />
     <Content Include="Images\Refresh.png" />
+    <Content Include="Images\Sync.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AppResources.resx">

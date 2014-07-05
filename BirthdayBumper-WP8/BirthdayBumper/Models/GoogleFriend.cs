@@ -13,15 +13,21 @@ namespace BirthdayBumper.Models
     /// </summary>
     class GoogleFriend : Friend
     {
+        public GoogleFriend()
+        {
+            Type = "google";
+        }
+
         public GoogleFriend(string _id, string _name, string _day, string _month, string _year, Uri _pic, string _site)
         {
             Id = _id;
             Name = _name;
             Day = _day;
             Month = _month;
-            Picture = new BitmapImage(_pic);
+            Picture = _pic.ToString();
             Wished = false;
             Site = _site;
+            Type = "google";
         }
     }
 

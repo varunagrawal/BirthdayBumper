@@ -7,6 +7,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using BirthdayBumper.Resources;
+using BirthdayBumper.Models;
 
 namespace BirthdayBumper
 {
@@ -55,6 +56,15 @@ namespace BirthdayBumper
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
+            // Create the database if it does not exist.
+            using (BirthdayBumperContext db = new BirthdayBumperContext(BirthdayBumperContext.DBConnectionString))
+            {
+                if (db.DatabaseExists() == false)
+                {
+                    //Create the database
+                    db.CreateDatabase();
+                }
+            }
         }
 
         // Code to execute when the application is launching (eg, from Start)

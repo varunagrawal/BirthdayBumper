@@ -39,6 +39,9 @@
                                     <Image Source="{Binding Picture}" Height="80" Width="80" />
                                     <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" Width="250" />
                                 </StackPanel>
+                                <Button x:Name="deleteTaskButton" BorderThickness="0" Margin="0" Click="deleteTaskButton_Click" >
+                                    <Image Source="appbar.delete.rest.png"/>
+                                </Button>
                                 <!--Button Name="btnDelete" Click="btnDelete_Click">
                                     <Image Source="/Images/Add.png" Height="30" Width="30" Margin="0,0,0,0" />
                                 </Button-->
@@ -57,6 +60,7 @@
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton x:Name="Accounts" IconUri="/Images/Configuration.png" Text="Accounts" Click="Accounts_Click" />
             <shell:ApplicationBarIconButton x:Name="Refresh" IconUri="/Images/Refresh.png" Text="Refresh" Click="Refresh_Click" />
+            <shell:ApplicationBarIconButton x:Name="Sync" IconUri="/Images/Sync.png" Text="Sync" Click="Sync_Click" />
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem x:Name="About" Text="About" Click="About_Click" />
                 <shell:ApplicationBarMenuItem x:Name="Readme" Text="Readme" Click="Readme_Click" />
