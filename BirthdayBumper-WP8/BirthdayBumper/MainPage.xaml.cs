@@ -31,14 +31,7 @@ namespace BirthdayBumper
         }
 
         void MainPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Check for Network Connectivity. If not available, then show message and exit.
-            if (!NetworkInterface.GetIsNetworkAvailable())
-            {
-                MessageBox.Show("No Network Connectivity." + Environment.NewLine + "Please check if you are connected to the Internet.");
-                Application.Current.Terminate();
-            }
-
+        {   
             // Navigate to the Birthdays Page
             if (!GoogleAccount.IsConnected && !FacebookAccount.IsConnected)
             {

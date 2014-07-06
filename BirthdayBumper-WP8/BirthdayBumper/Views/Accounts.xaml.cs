@@ -20,13 +20,14 @@ namespace BirthdayBumper.Views
             InitializeComponent();
 
             // Check for Network Connectivity. If not available, then show message and exit.
-            if (!NetworkInterface.GetIsNetworkAvailable())
-            {
-                MessageBox.Show("No Network Connectivity." + Environment.NewLine + "Please check if you are connected to the Internet.");
+            //if (!NetworkInterface.GetIsNetworkAvailable())
+            //{
+            //    MessageBox.Show("No Network Connectivity." + Environment.NewLine + "Please check if you are connected to the Internet.");
                 
-                NavigationService.RemoveBackEntry();
-                NavigationService.GoBack();
-            }
+            //    NavigationService.RemoveBackEntry();
+            //    NavigationService.GoBack();
+            //}
+
             accounts = new List<string>() { "Facebook", "Google" };
 
             DataContext = accounts;
