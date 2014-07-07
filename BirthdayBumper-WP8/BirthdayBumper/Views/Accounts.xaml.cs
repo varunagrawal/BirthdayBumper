@@ -19,15 +19,6 @@ namespace BirthdayBumper.Views
         {
             InitializeComponent();
 
-            // Check for Network Connectivity. If not available, then show message and exit.
-            //if (!NetworkInterface.GetIsNetworkAvailable())
-            //{
-            //    MessageBox.Show("No Network Connectivity." + Environment.NewLine + "Please check if you are connected to the Internet.");
-                
-            //    NavigationService.RemoveBackEntry();
-            //    NavigationService.GoBack();
-            //}
-
             accounts = new List<string>() { "Facebook", "Google" };
 
             DataContext = accounts;
@@ -35,17 +26,19 @@ namespace BirthdayBumper.Views
 
         private void AccountsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Check for Network Connectivity. If not available, then show message and exit.
+            if (!NetworkInterface.GetIsNetworkAvailable())
+            {
+                MessageBox.Show("No Network Connectivity." + Environment.NewLine + "Please check if you are connected to the Internet.");
+
+                NavigationService.GoBack();
+            }
+
             if(AccountsList.SelectedItem == null)
                 return;
 
-            if((string)AccountsList.SelectedItem == "Google")
-            {
-                NavigationService.Navigate(new Uri("/Views/GoogleLoginPage.xaml", UriKind.RelativeOrAbsolute));
-            }
-            else if ((string)AccountsList.SelectedItem == "Facebook")
-            {
-                NavigationService.Navigate(new Uri("/Views/FacebookLoginPage.xaml", UriKind.RelativeOrAbsolute));
-            }
+            NavigationService.Navigate(new Uri("/Views/" + (string)AccountsList.SelectedItem + "LoginPage.xaml", UriKind.RelativeOrAbsolute));
+
         }
     }
 }
