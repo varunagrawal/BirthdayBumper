@@ -19,8 +19,6 @@ namespace BirthdayBumper.Views
 {
     public partial class FacebookLoginPage : PhoneApplicationPage
     {
-        private readonly FacebookClient _fb = new FacebookClient();
-
         public FacebookLoginPage()
         {
             InitializeComponent();
@@ -29,6 +27,9 @@ namespace BirthdayBumper.Views
 
         private async void FacebookLoginPage_Loaded(object sender, RoutedEventArgs e)
         {
+            SystemTray.ProgressIndicator = new ProgressIndicator();
+            SystemTray.ProgressIndicator.Text = "Loading Facebook...";
+
             if(!FacebookAccount.isAuthenticated)
             {
                 await Authenticate();
@@ -44,13 +45,14 @@ namespace BirthdayBumper.Views
 
             try
             {
+                FacebookAccount.isAuthenticated = true;
+
                 session = await fbclient.LoginAsync(FacebookAccount.ExtendedPermissions);
 
                 FacebookAccount.AccessToken = session.AccessToken;
                 FacebookAccount.FacebookId = session.FacebookId;
 
                 FacebookAccount.IsConnected = true;
-                FacebookAccount.isAuthenticated = true;
 
                 NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
             }
@@ -65,12 +67,7 @@ namespace BirthdayBumper.Views
         }
 
         private void ShowProgressBar(bool set)
-        {
-            if (set)
-            {
-                SystemTray.ProgressIndicator = new ProgressIndicator();
-            }
-            
+        {   
             if (SystemTray.ProgressIndicator != null)
             {
                 SystemTray.ProgressIndicator.IsVisible = set;
