@@ -163,30 +163,22 @@ namespace BirthdayBumper.Views
 
             List<Friend> friends = new List<Friend>();
 
-            #region Facebook Friends
-            if (FacebookAccount.IsConnected)
-            {
-                string site;
-                NavigationContext.QueryString.TryGetValue("from", out site);
-                if (site == "facebook")
-                {
-                    List<Friend> f = await FriendData.GetFacebookBirthdays();
-                    if (f != null)
-                        friends = friends.Concat(f).ToList<Friend>();
-                }
-                else
-                {
-                    NavigationService.Navigate(new Uri("/Views/FacebookLoginPage.xaml", UriKind.RelativeOrAbsolute));
-                }
-            }
-            #endregion
-
             #region Google Friends
             if (GoogleAccount.IsConnected)
             {
                 List<Friend> g = await FriendData.GetGoogleBirthdays();
                 if (g != null)
                     friends = friends.Concat(g).ToList<Friend>();
+            }
+            #endregion
+
+            #region Facebook Friends
+            if (FacebookAccount.IsConnected)
+            {
+                List<Friend> f = await FriendData.GetFacebookBirthdays();
+                if (f != null)
+                    friends = friends.Concat(f).ToList<Friend>();
+
             }
             #endregion
 
@@ -258,7 +250,11 @@ namespace BirthdayBumper.Views
         {
             if(FriendData.Friends.Count == 0)
             {
-                MessageBox.Show("No Birthdays today");
+                //MessageBox.Show("No Birthdays today");
+                FriendData.Friends.Add(new Friend
+                {
+                    Name = "No Birthdays Today"
+                });
             }
         }
 
@@ -284,20 +280,25 @@ namespace BirthdayBumper.Views
             MessageBox.Show("All birthdays may not be visible due to Privacy settings of the people in your social network.");
         }
 
-        private async void Sync_Click(object sender, EventArgs e)
+        private void Sync_Click(object sender, EventArgs e)
         {
-            SetProgressBar(true);
-            ApplicationBar.IsVisible = false;
+            // Needed as Facebook does not provide a way to check for expired tokens
 
-            bool refreshed = await GetAndStoreBirthdays();
+            IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+            settings.Remove("AlreadyLoggedIn");
 
-            if (refreshed)
+            if (FacebookAccount.IsConnected)
             {
-                LoadBirthdays();
+                FacebookAccount.IsConnected = false;
+                FacebookAccount.isAuthenticated = false;
+
+                NavigationService.Navigate(new Uri("/Views/FacebookLoginPage.xaml", UriKind.RelativeOrAbsolute));
+            }
+            else 
+            {
+                NavigationService.Navigate(NavigationService.CurrentSource);
             }
 
-            SetProgressBar(false);
-            ApplicationBar.IsVisible = true;
         }
 
     }

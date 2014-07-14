@@ -18,6 +18,7 @@ namespace BirthdayBumper.ViewModels
         public const string ExtendedPermissions = "user_about_me,read_stream,friends_birthday";
 
         private static string accessToken = String.Empty;
+        internal static string FacebookId = String.Empty;
         private static bool isConnected = false;
         public static bool isAuthenticated = false;
 
@@ -29,7 +30,15 @@ namespace BirthdayBumper.ViewModels
             {
                 try
                 {
-                    accessToken = (string)appSettings["facebook_accessToken"];
+                    if (appSettings.Contains("facebook_accessToken"))
+                    {
+                        accessToken = (string)appSettings["facebook_accessToken"];
+                    }
+                    else
+                    {
+                        accessToken = "";
+                    }
+                    
                 }
                 catch (KeyNotFoundException e)
                 {
@@ -104,12 +113,9 @@ namespace BirthdayBumper.ViewModels
         /// </summary>
         public static async Task<List<Friend>> GetFacebookBirthdays()
         {
-            FacebookClient fb = new FacebookClient(FacebookAccount.AccessToken);
-
             List<Friend> Friends = new List<Friend>();
 
-            //string month = DateTime.Now.ToString("MMMM");
-            //int day = DateTime.Now.Day;
+            FacebookClient fb = new FacebookClient(FacebookAccount.AccessToken);
 
             try
             {
@@ -153,9 +159,6 @@ namespace BirthdayBumper.ViewModels
                                     "https://www.facebook.com/" + friend["uid"].ToString()
                                 ));
 
-                            //if (Birthdate[0] == m && Birthdate[1] == d)
-                            //{    
-                            //}
                         }
                     }
                     catch (Exception ex)
@@ -173,5 +176,6 @@ namespace BirthdayBumper.ViewModels
 
             return Friends;
         }
+
     }
 }

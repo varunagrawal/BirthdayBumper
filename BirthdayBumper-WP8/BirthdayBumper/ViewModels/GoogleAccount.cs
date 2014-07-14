@@ -40,7 +40,14 @@ namespace BirthdayBumper.ViewModels
             {
                 try
                 {
-                    accessToken = (string)appSettings["google_accessToken"];
+                    if (appSettings.Contains("google_accessToken"))
+                    {
+                        accessToken = (string)appSettings["google_accessToken"];
+                    }
+                    else
+                    {
+                        accessToken = "";
+                    }
                 }
                 catch (KeyNotFoundException e)
                 {

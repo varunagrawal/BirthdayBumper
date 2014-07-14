@@ -28,7 +28,7 @@
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <phone:WebBrowser x:Name="FBLoginBrowser" HorizontalAlignment="Left" VerticalAlignment="Top" Width="456" Height="665" Navigated="FBLoginBrowser_Navigated" Margin="0,-84,0,0" LoadCompleted="FBLoginBrowser_LoadCompleted" />
+            <!--phone:WebBrowser x:Name="FBLoginBrowser" HorizontalAlignment="Left" VerticalAlignment="Top" Width="456" Height="665" Navigated="FBLoginBrowser_Navigated" Margin="0,-84,0,0" LoadCompleted="FBLoginBrowser_LoadCompleted" Visibility="Collapsed" /-->
         </Grid>
     </Grid>
 

@@ -11,6 +11,9 @@ using Microsoft.Phone.Shell;
 using Facebook;
 
 using BirthdayBumper.ViewModels;
+using System.IO.IsolatedStorage;
+using Facebook.Client;
+using System.Threading.Tasks;
 
 namespace BirthdayBumper.Views
 {
@@ -24,78 +27,41 @@ namespace BirthdayBumper.Views
             this.Loaded += FacebookLoginPage_Loaded;
         }
 
-        private void FacebookLoginPage_Loaded(object sender, RoutedEventArgs e)
+        private async void FacebookLoginPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            if(!FacebookAccount.isAuthenticated)
+            {
+                await Authenticate();
+            }
+        }
+
+        private async Task Authenticate()
         {
             ShowProgressBar(true);
 
-            var loginUrl = GetFacebookLoginUrl(FacebookAccount.App_Id, FacebookAccount.ExtendedPermissions);
-            FBLoginBrowser.Navigate(loginUrl);
-            
-            //if (String.IsNullOrEmpty(FacebookAccount.AccessToken))
-            //{
-            //    ShowProgressBar(true);
+            FacebookSession session;
+            FacebookSessionClient fbclient = new FacebookSessionClient(FacebookAccount.App_Id);
 
-            //    var loginUrl = GetFacebookLoginUrl(FacebookAccount.App_Id, FacebookAccount.ExtendedPermissions);
-            //    FBLoginBrowser.Navigate(loginUrl);
-            //}
-            //else
-            //{
-            //    NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
-            //}
-        }
-
-        private Uri GetFacebookLoginUrl(string appId, string extendedPermissions)
-        {
-            var parameters = new Dictionary<string, object>();
-            parameters["client_id"] = appId;
-            parameters["redirect_uri"] = "https://www.facebook.com/connect/login_success.html";
-            parameters["response_type"] = "token";
-            parameters["display"] = "touch";
-
-            // add the 'scope' only if we have extendedPermissions.
-            if (!string.IsNullOrEmpty(extendedPermissions))
+            try
             {
-                // A comma-delimited list of permissions
-                parameters["scope"] = extendedPermissions;
-            }
+                session = await fbclient.LoginAsync(FacebookAccount.ExtendedPermissions);
 
-            string loginUri = _fb.GetLoginUrl(parameters).ToString().Replace("www.facebook.com", "m.facebook.com");
+                FacebookAccount.AccessToken = session.AccessToken;
+                FacebookAccount.FacebookId = session.FacebookId;
 
-            return new Uri(loginUri);
-        }
-
-
-
-        private void FBLoginBrowser_Navigated(object sender, NavigationEventArgs e)
-        {
-            ShowProgressBar(true);
-
-            FacebookOAuthResult oauthResult;
-            if (!_fb.TryParseOAuthCallbackUrl(e.Uri, out oauthResult))
-            {
-                return;
-            }
-
-            if (oauthResult.IsSuccess)
-            {
-                var token = oauthResult.AccessToken;
-                FacebookAccount.AccessToken = oauthResult.AccessToken;
                 FacebookAccount.IsConnected = true;
+                FacebookAccount.isAuthenticated = true;
 
-                ShowProgressBar(false);
-
-                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml?from=facebook", UriKind.RelativeOrAbsolute));
+                NavigationService.Navigate(new Uri("/Views/Birthdays.xaml", UriKind.RelativeOrAbsolute));
             }
-            else
+            catch (InvalidOperationException ioe)
             {
-                // user cancelled
-                MessageBox.Show(oauthResult.ErrorDescription);
+                MessageBox.Show("Login Failed! Exception: " + ioe.Message);
             }
-        }
-
-        private void FBLoginBrowser_LoadCompleted(object sender, NavigationEventArgs e)
-        {
-            ShowProgressBar(false);
+            finally
+            {
+                ShowProgressBar(false);
+            }
         }
 
         private void ShowProgressBar(bool set)
