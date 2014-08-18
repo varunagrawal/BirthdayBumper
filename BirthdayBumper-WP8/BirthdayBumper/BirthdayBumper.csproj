@@ -159,9 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="BirthdayBumper_2014_05_10_03_36_19.sap" />
-    <None Include="BirthdayBumper_2014_05_10_03_46_30.sap" />
-    <None Include="client_secret.json" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">
@@ -201,6 +198,7 @@
     <Content Include="Images\Icons\BB_White_Small.png" />
     <Content Include="Images\Refresh.png" />
     <Content Include="Images\Sync.png" />
+    <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AppResources.resx">
