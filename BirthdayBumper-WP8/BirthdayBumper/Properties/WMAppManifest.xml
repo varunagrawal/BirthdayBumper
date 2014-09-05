@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
-  <App xmlns="" ProductID="{9fb59823-2c36-4c74-a614-b2b005cec608}" Title="Birthday Bumper" RuntimeType="Silverlight" Version="2.8.1.0" Genre="apps.normal" Author="Varun Agrawal" Description="Never forget a friend's birthday ever again!" Publisher="VarTech" PublisherID="{03ed6020-38c0-4294-bd07-c944861baaed}">
-    <IconPath IsRelative="true" IsResource="false">Images\Icons\AppIcon.png</IconPath>
+  <App xmlns="" ProductID="{9fb59823-2c36-4c74-a614-b2b005cec608}" Title="Birthday Bumper" RuntimeType="Silverlight" Version="3.0.0.2" Genre="apps.normal" Author="Varun Agrawal" Description="Never forget a friend's birthday ever again!" Publisher="VarTech" PublisherID="{03ed6020-38c0-4294-bd07-c944861baaed}">
+    <IconPath IsRelative="true" IsResource="false">Images\Icons\BirthdayBumper.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
       <Capability Name="ID_CAP_MEDIALIB_AUDIO" />
@@ -20,9 +20,9 @@
     <Tokens>
       <PrimaryToken TokenID="BirthdayBumperToken" TaskName="_default">
         <TemplateIconic>
-          <SmallImageURI IsRelative="true" IsResource="false">Images\Icons\BB_White_Small.png</SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">Images\Icons\BirthdayBumper70x110.png</SmallImageURI>
           <Count>0</Count>
-          <IconImageURI IsRelative="true" IsResource="false">Images\Icons\BB_White_Medium.png</IconImageURI>
+          <IconImageURI IsRelative="true" IsResource="false">Images\Icons\BirthdayBumper130x202.png</IconImageURI>
           <Title>Birthday Bumper</Title>
           <Message>
           </Message>

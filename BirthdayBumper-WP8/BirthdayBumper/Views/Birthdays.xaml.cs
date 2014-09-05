@@ -20,6 +20,7 @@ using System.ComponentModel;
 using System.IO.IsolatedStorage;
 using System.Threading.Tasks;
 
+
 namespace BirthdayBumper.Views
 {
     public partial class Birthdays : PhoneApplicationPage, INotifyPropertyChanged
@@ -45,6 +46,7 @@ namespace BirthdayBumper.Views
         }
 
         FriendDataModel FriendData = new FriendDataModel();
+        FriendDataModel Upcoming = new FriendDataModel();
 
         public Birthdays()
         {
@@ -56,7 +58,7 @@ namespace BirthdayBumper.Views
             // Data context and observable collection are children of the main page.
             this.DataContext = this;
 
-            this.Loaded += Birthdays_Loaded;            
+            this.Loaded += Birthdays_Loaded;
         }
 
         #region INotifyPropertyChanged Members
@@ -87,6 +89,8 @@ namespace BirthdayBumper.Views
             SystemTray.ProgressIndicator.Text = "Loading birthdays...";
 
             txtLoading.Visibility = System.Windows.Visibility.Visible;
+            upcomingTxtLoading.Visibility = System.Windows.Visibility.Visible;
+
             SetProgressBar(true);
             ApplicationBar.IsVisible = false;
 
@@ -107,6 +111,8 @@ namespace BirthdayBumper.Views
             }
 
             txtLoading.Visibility = System.Windows.Visibility.Collapsed;
+            upcomingTxtLoading.Visibility = System.Windows.Visibility.Collapsed;
+
             SetProgressBar(false);
             ApplicationBar.IsVisible = true;
 
@@ -126,26 +132,36 @@ namespace BirthdayBumper.Views
         private void LoadBirthdays()
         {
             BirthdaysList.DataContext = null;
+            UpcomingBirthdays.DataContext = null;
 
             FriendData.IsLoading = true;
+            Upcoming.IsLoading = true;
 
             using (birthdayDB = new BirthdayBumperContext(BirthdayBumperContext.DBConnectionString))
             {
                 string m = DateTime.Now.ToString("MMMM");
                 string d = DateTime.Now.Day.ToString();
+                string nextday = DateTime.Now.AddDays(1.0).Day.ToString();
 
                 // Define the query to gather all of the to-do items.
                 var friendsInDB = from Friend friend in birthdayDB.Friends
                                   where friend.Day == d && friend.Month == m
                                   select friend;
 
+                var upcoming = from Friend friend in birthdayDB.Friends
+                               where friend.Day == nextday && friend.Month == m
+                               select friend;
+
                 // Execute the query and place the results into a collection.
                 FriendData.Friends = new ObservableCollection<Friend>(friendsInDB);
+                Upcoming.Friends = new ObservableCollection<Friend>(upcoming);
 
                 BirthdaysList.DataContext = FriendData.Friends;
+                UpcomingBirthdays.DataContext = Upcoming.Friends;
             }
             
             FriendData.IsLoading = false;
+            Upcoming.IsLoading = false;
 
             CheckZeroBirthdays();
 
@@ -300,6 +316,6 @@ namespace BirthdayBumper.Views
             }
 
         }
-
     }
+
 }

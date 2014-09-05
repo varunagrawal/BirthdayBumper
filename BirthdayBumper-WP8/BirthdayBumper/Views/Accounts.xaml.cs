@@ -24,6 +24,12 @@ namespace BirthdayBumper.Views
             DataContext = accounts;
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            NavigationService.RemoveBackEntry();
+        }
+
         private void AccountsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Check for Network Connectivity. If not available, then show message and exit.

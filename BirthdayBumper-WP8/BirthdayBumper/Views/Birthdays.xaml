@@ -1,59 +1,75 @@
 ﻿<phone:PhoneApplicationPage
+    x:Class="BirthdayBumper.Views.Birthdays"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
     xmlns:UI="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
-    x:Class="BirthdayBumper.Views.Birthdays"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
-    mc:Ignorable="d"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="BIRTHDAY BUMPER" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="birthdays" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
-
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <TextBlock x:Name="txtLoading" Text="Loading..." />
-            <phone:LongListSelector x:Name="BirthdaysList" HorizontalAlignment="Left" Height="482" VerticalAlignment="Top" Width="446" ItemsSource="{Binding}" SelectionChanged="BirthdayList_SelectionChanged" >
-                <phone:LongListSelector.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Horizontal" Width="350" Margin="10,12,0,0">
-                                    <Image Source="{Binding Picture}" Height="80" Width="80" />
-                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" Width="250" />
+        <!--Pivot Control-->
+        <phone:Pivot Title="BIRTHDAY BUMPER">
+            <!--Pivot item one-->
+            <phone:PivotItem Header="Birthdays">
+                <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+                    <TextBlock x:Name="txtLoading" Text="Loading..." />
+                    <phone:LongListSelector x:Name="BirthdaysList" HorizontalAlignment="Left" Height="482" VerticalAlignment="Top" Width="446" ItemsSource="{Binding}" SelectionChanged="BirthdayList_SelectionChanged" >
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Horizontal" Width="350" Margin="10,12,0,0">
+                                            <Image Source="{Binding Picture}" Height="80" Width="80" />
+                                            <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" Width="250" />
+                                        </StackPanel>
+                                        <!--Button x:Name="deleteTaskButton" BorderThickness="0" Margin="0" Click="deleteTaskButton_Click" >
+                                            <Image Source="appbar.delete.rest.png"/>
+                                        </Button-->
+                                    </StackPanel>
                                 </StackPanel>
-                                <Button x:Name="deleteTaskButton" BorderThickness="0" Margin="0" Click="deleteTaskButton_Click" >
-                                    <Image Source="appbar.delete.rest.png"/>
-                                </Button>
-                                <!--Button Name="btnDelete" Click="btnDelete_Click">
-                                    <Image Source="/Images/Add.png" Height="30" Width="30" Margin="0,0,0,0" />
-                                </Button-->
-                            </StackPanel>
-                        </StackPanel>
-                    </DataTemplate>
-                </phone:LongListSelector.ItemTemplate>
-            </phone:LongListSelector>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
 
-            <UI:AdControl ApplicationId="69dfb837-b94b-414c-8fdb-7bb15d601ec0" AdUnitId="10737407" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,445,0,0" IsAutoRefreshEnabled="True"/>
+                    <UI:AdControl ApplicationId="69dfb837-b94b-414c-8fdb-7bb15d601ec0" AdUnitId="10737407" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="456" Margin="0,445,0,0" IsAutoRefreshEnabled="True"/>
 
-        </Grid>
+                </Grid>
+            </phone:PivotItem>
+
+            <!--Pivot item two-->
+            <phone:PivotItem Header="Upcoming">
+                <Grid x:Name="UpcomingContentPanel" Grid.Row="1" Margin="12,0,12,0">
+                    <TextBlock x:Name="upcomingTxtLoading" Text="Loading..." />
+                    <phone:LongListSelector x:Name="UpcomingBirthdays" HorizontalAlignment="Left" Height="482" VerticalAlignment="Top" Width="446" ItemsSource="{Binding}" SelectionChanged="BirthdayList_SelectionChanged" >
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Horizontal" Width="350" Margin="10,12,0,0">
+                                            <Image Source="{Binding Picture}" Height="80" Width="80" />
+                                            <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}" Width="250" />
+                                        </StackPanel>
+                                        <!--Button x:Name="deleteTaskButton" BorderThickness="0" Margin="0" Click="deleteTaskButton_Click" >
+                                            <Image Source="appbar.delete.rest.png"/>
+                                        </Button-->
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+
+                </Grid>
+            </phone:PivotItem>
+        </phone:Pivot>
     </Grid>
 
     <phone:PhoneApplicationPage.ApplicationBar>
@@ -67,5 +83,5 @@
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
-
+    
 </phone:PhoneApplicationPage>

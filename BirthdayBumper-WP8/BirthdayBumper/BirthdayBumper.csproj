@@ -192,10 +192,10 @@
     <Content Include="Images\Delete.png" />
     <Content Include="Images\Erase.png" />
     <Content Include="Images\Icons\AppIcon.png" />
-    <Content Include="Images\Icons\BB_AppIcon.png" />
-    <Content Include="Images\Icons\BB_White.png" />
-    <Content Include="Images\Icons\BB_White_Medium.png" />
-    <Content Include="Images\Icons\BB_White_Small.png" />
+    <Content Include="Images\Icons\BirthdayBumper.png" />
+    <Content Include="Images\Icons\BirthdayBumper130x202.png" />
+    <Content Include="Images\Icons\BirthdayBumper70x110.png" />
+    <Content Include="Images\Icons\BirthdayBumper99.png" />
     <Content Include="Images\Refresh.png" />
     <Content Include="Images\Sync.png" />
     <Content Include="SplashScreenImage.jpg" />
@@ -242,6 +242,7 @@
     </Reference>
     <Reference Include="Microsoft.Advertising.Mobile, Version=6.2.960.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.2.960.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Phone.Controls, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
