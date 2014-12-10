@@ -306,7 +306,7 @@ namespace BirthdayBumper.Views
             if (FacebookAccount.IsConnected)
             {
                 FacebookAccount.IsConnected = false;
-                FacebookAccount.isAuthenticated = false;
+                FacebookAccount.IsAuthenticated = false;
 
                 NavigationService.Navigate(new Uri("/Views/FacebookLoginPage.xaml", UriKind.RelativeOrAbsolute));
             }

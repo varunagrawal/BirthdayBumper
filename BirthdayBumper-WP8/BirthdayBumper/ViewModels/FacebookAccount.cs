@@ -20,7 +20,7 @@ namespace BirthdayBumper.ViewModels
         private static string accessToken = String.Empty;
         internal static string FacebookId = String.Empty;
         private static bool isConnected = false;
-        public static bool isAuthenticated = false;
+        public static bool IsAuthenticated = false;
 
         private static readonly IsolatedStorageSettings appSettings = IsolatedStorageSettings.ApplicationSettings;
 

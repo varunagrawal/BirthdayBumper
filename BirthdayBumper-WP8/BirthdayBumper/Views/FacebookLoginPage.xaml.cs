@@ -30,10 +30,18 @@ namespace BirthdayBumper.Views
             SystemTray.ProgressIndicator = new ProgressIndicator();
             SystemTray.ProgressIndicator.Text = "Loading Facebook...";
 
-            if(!FacebookAccount.isAuthenticated)
-            {
-                await Authenticate();
-            }
+			if (!FacebookAccount.IsAuthenticated)
+			{
+				await Authenticate();
+			}
+			else
+			{
+				if (NavigationService.CanGoBack)
+				{
+					NavigationService.RemoveBackEntry();
+					NavigationService.GoBack();
+				}
+			}
         }
 
         private async Task Authenticate()
@@ -45,7 +53,7 @@ namespace BirthdayBumper.Views
 
             try
             {
-                FacebookAccount.isAuthenticated = true;
+                FacebookAccount.IsAuthenticated = true;
 
                 session = await fbclient.LoginAsync(FacebookAccount.ExtendedPermissions);
 
